@@ -10,9 +10,9 @@ class CompareMatrix(object):
         for i in range(self.__n):
             self.__matrix[i, i] = 1
         self.__categories = [None] * self.__n
-        self.__perron_frobenius_eigenvalue = 0
+        self.__main_eigenvalue = 0
         # noinspection PyUnresolvedReferences
-        self.__perron_frobenius_eigenvector = np.zeros(shape=self.__n)
+        self.__main_eigenvector = np.zeros(shape=self.__n)
 
     def set_matrix_element(self, row_num, column_num, value):
         if row_num == column_num:
@@ -53,21 +53,21 @@ class CompareMatrix(object):
         v = abs(v)
         w = abs(w)
         perron_position = np.argmax(v)
-        self.__perron_frobenius_eigenvalue = v[perron_position]
-        self.__perron_frobenius_eigenvector = w[:, perron_position]
+        self.__main_eigenvalue = v[perron_position]
+        self.__main_eigenvector = w[:, perron_position]
 
-    def get_perron_frobenius_eigenvalue(self):
-        return self.__perron_frobenius_eigenvalue
+    def get_main_eigenvalue(self):
+        return self.__main_eigenvalue
 
-    def perron_frobenius_eigenvector(self):
-        return self.__perron_frobenius_eigenvector
+    def main_eigenvector(self):
+        return self.__main_eigenvector
 
     def get_weights(self):
-        summa = sum(self.__perron_frobenius_eigenvector)
-        return self.__perron_frobenius_eigenvector / summa
+        summa = sum(self.__main_eigenvector)
+        return self.__main_eigenvector / summa
 
     def get_consistency_index(self):
-        return (self.__perron_frobenius_eigenvalue - self.__n) / (self.__n - 1)
+        return (self.__main_eigenvalue - self.__n) / (self.__n - 1)
 
     def get_consistency_ratio(self):
         n_to_ri = {
@@ -89,8 +89,8 @@ class CompareMatrix(object):
         }
         if self.__n <= 15:
             result = self.get_consistency_index() / n_to_ri[self.__n]
-        else:  # unable to define C.R.
-            result = None
+        else:  # no empirical data to exactly define C.R.
+            result = 1.59
         return result
 
     def get_unsorted_result(self):
@@ -115,10 +115,10 @@ class CompareMatrix(object):
             round_result[i][2] = round(round_result[i][2], 3)
         return ('Categories = ' + '\n' + str(self.get_categories()) + '\n' +
                 'Matrix = ' + '\n' + str(round_matrix) + '\n' +
-                'Perron-Frobenius eigenvalue = ' + str(round(self.get_perron_frobenius_eigenvalue(), 3)) + '\n' +
-                'Perron-Frobenius eigenvector = ' + '\n' +
-                str([round(v, 3) for v in self.perron_frobenius_eigenvector()]) + '\n' +
+                'Main eigenvalue = ' + str(round(self.get_main_eigenvalue(), 3)) + '\n' +
+                'Main eigenvector = ' + '\n' +
+                str([round(v, 3) for v in self.main_eigenvector()]) + '\n' +
                 'Weights = ' + '\n' + str([round(v, 3) for v in self.get_weights()]) + '\n' +
-                'Consistency index = ' + str(round(self.get_consistency_index(), 3)) + '\n' +
-                'Consistency ratio = ' + str(round(self.get_consistency_ratio(), 3)) + '\n' +
+                'C.I. = ' + str(round(self.get_consistency_index(), 3)) + '\n' +
+                'C.R. = ' + str(round(self.get_consistency_ratio(), 3)) + '\n' +
                 'Sorted result = ' + '\n' + str(round_result))
