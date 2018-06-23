@@ -1,6 +1,7 @@
 import numpy as np
 import maimodules.utils as ut
 
+
 class CompareMatrix(object):
 
     def __init__(self, size):
@@ -159,7 +160,6 @@ class AhpContainer(object):
         for i in range(len(self.__factors)):
             self.__alternatives_compare_matrixes[i].calculate()
 
-
     def to_string(self):
         result = '=============================================================================' + '\n'
         result += '** Factors compare matrix **' + '\n'
@@ -168,6 +168,6 @@ class AhpContainer(object):
         result += '** Alternatives compare matrixes **' + '\n\n'
         for i in range(len(self.__factors)):
             result += '-----------------------------------------------------------------------------' + '\n'
-            result += '* Comparing by factor ' + str(i + 1) + ': "' + self.__factors[i]+ '"' + ' * \n'
+            result += '* Comparing by factor ' + str(i + 1) + ': "' + self.__factors[i] + '"' + ' * \n'
             result += self.__alternatives_compare_matrixes[i].to_string() + '\n\n'
         return result

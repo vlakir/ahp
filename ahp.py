@@ -64,5 +64,3 @@ ahp_container.set_alternatives_compare_matrixes_elements(8, alternatives_compare
 ahp_container.calculate()
 
 print(ahp_container.to_string())
-
-
