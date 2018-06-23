@@ -1,5 +1,5 @@
 import numpy as np
-
+import maimodules.utils as ut
 
 class CompareMatrix(object):
 
@@ -64,7 +64,12 @@ class CompareMatrix(object):
 
     def get_weights(self):
         summa = sum(self.__main_eigenvector)
-        return self.__main_eigenvector / summa
+
+        if summa != 0:
+            result = self.__main_eigenvector / summa
+        else:
+            result = self.__main_eigenvector * 0
+        return result
 
     def get_consistency_index(self):
         return (self.__main_eigenvalue - self.__n) / (self.__n - 1)
@@ -94,16 +99,10 @@ class CompareMatrix(object):
         return result
 
     def get_unsorted_result(self):
-        weights = self.get_weights()
-        result = []
-        for i in range(len(self.__categories)):
-            result.append([i + 1, self.__categories[i], weights[i]])
-        return result
+        return ut.glue_result(self.__categories, self.get_weights(), False)
 
     def get_sorted_result(self):
-        result = self.get_unsorted_result()
-        result.sort(key=lambda lst: lst[2], reverse=True)
-        return result
+        return ut.glue_result(self.__categories, self.get_weights(), True)
 
     def to_string(self):
         round_matrix = self.get_matrix()
@@ -122,3 +121,53 @@ class CompareMatrix(object):
                 'C.I. = ' + str(round(self.get_consistency_index(), 3)) + '\n' +
                 'C.R. = ' + str(round(self.get_consistency_ratio(), 3)) + '\n' +
                 'Sorted result = ' + '\n' + str(round_result))
+
+
+class AhpContainer(object):
+    def __init__(self, alternatives, factors):
+        self.__factors = factors
+        self.__alternatives = alternatives
+        self.__factors_compare_matrix = CompareMatrix(len(factors))
+        self.__factors_compare_matrix.set_categories(self.__factors)
+
+        self.__alternatives_compare_matrixes = []
+        for i in range(len(factors)):
+            acm = CompareMatrix(len(alternatives))
+            acm.set_categories(self.__alternatives)
+            self.__alternatives_compare_matrixes.append(acm)
+
+    def get_factors_count(self):
+        return len(self.__factors)
+
+    def get_alternatives_count(self):
+        return len(self.__alternatives)
+
+    def set_factors_compare_matrix_element(self, row_num, column_num, value):
+        self.__factors_compare_matrix.set_matrix_element(row_num, column_num, value)
+
+    def set_alternatives_compare_matrixes_element(self, matrix_num, row_num, column_num, value):
+        self.__alternatives_compare_matrixes[matrix_num - 1].set_matrix_element(row_num, column_num, value)
+
+    def set_factors_compare_matrix_elements(self, array):
+        self.__factors_compare_matrix.set_matrix(array)
+
+    def set_alternatives_compare_matrixes_elements(self, matrix_num, array):
+        self.__alternatives_compare_matrixes[matrix_num - 1].set_matrix(array)
+
+    def calculate(self):
+        self.__factors_compare_matrix.calculate()
+        for i in range(len(self.__factors)):
+            self.__alternatives_compare_matrixes[i].calculate()
+
+
+    def to_string(self):
+        result = '=============================================================================' + '\n'
+        result += '** Factors compare matrix **' + '\n'
+        result += self.__factors_compare_matrix.to_string() + '\n\n'
+        result += '=============================================================================' + '\n'
+        result += '** Alternatives compare matrixes **' + '\n\n'
+        for i in range(len(self.__factors)):
+            result += '-----------------------------------------------------------------------------' + '\n'
+            result += '* Comparing by factor ' + str(i + 1) + ': "' + self.__factors[i]+ '"' + ' * \n'
+            result += self.__alternatives_compare_matrixes[i].to_string() + '\n\n'
+        return result
