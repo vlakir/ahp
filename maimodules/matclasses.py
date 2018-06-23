@@ -122,4 +122,3 @@ class CompareMatrix(object):
                 'Consistency index = ' + str(round(self.get_consistency_index(), 3)) + '\n' +
                 'Consistency ratio = ' + str(round(self.get_consistency_ratio(), 3)) + '\n' +
                 'Sorted result = ' + '\n' + str(round_result))
-
