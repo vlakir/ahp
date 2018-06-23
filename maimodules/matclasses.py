@@ -2,7 +2,7 @@ import numpy as np
 import maimodules.utils as ut
 
 
-class CompareMatrix(object):
+class PairedComparisonMatrix(object):
 
     def __init__(self, size):
         self.__n = size
@@ -124,16 +124,16 @@ class CompareMatrix(object):
                 'Sorted result = ' + '\n' + str(round_result))
 
 
-class AhpContainer(object):
+class RelativeMeasurement(object):
     def __init__(self, alternatives, factors):
         self.__factors = factors
         self.__alternatives = alternatives
-        self.__factors_compare_matrix = CompareMatrix(len(factors))
+        self.__factors_compare_matrix = PairedComparisonMatrix(len(factors))
         self.__factors_compare_matrix.set_categories(self.__factors)
 
         self.__alternatives_compare_matrixes = []
         for i in range(len(factors)):
-            acm = CompareMatrix(len(alternatives))
+            acm = PairedComparisonMatrix(len(alternatives))
             acm.set_categories(self.__alternatives)
             self.__alternatives_compare_matrixes.append(acm)
 
