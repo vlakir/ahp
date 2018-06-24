@@ -117,7 +117,7 @@ class PairedComparisonMatrix(object):
                 'Matrix = ' + '\n' + str(round_matrix) + '\n' +
                 'Main eigenvalue = ' + str(round(self.get_main_eigenvalue(), 3)) + '\n' +
                 'Main eigenvector = ' + '\n' +
-                str([round(v, 3) for v in self.main_eigenvector()]) + '\n' +
+                str([round(v, 3) for v in self.__main_eigenvector]) + '\n' +
                 'Weights = ' + '\n' + str([round(v, 3) for v in self.get_weights()]) + '\n' +
                 'C.I. = ' + str(round(self.get_consistency_index(), 3)) + '\n' +
                 'C.R. = ' + str(round(self.get_consistency_ratio(), 3)) + '\n' +
@@ -130,7 +130,7 @@ class RelativeMeasurement(object):
         self.__alternatives = alternatives
         self.__factors_compare_matrix = PairedComparisonMatrix(len(factors))
         self.__factors_compare_matrix.set_categories(self.__factors)
-
+        self.__weights = [0] * len(self.__alternatives)
         self.__alternatives_compare_matrixes = []
         for i in range(len(factors)):
             acm = PairedComparisonMatrix(len(alternatives))
@@ -142,6 +142,12 @@ class RelativeMeasurement(object):
 
     def get_alternatives_count(self):
         return len(self.__alternatives)
+
+    def get_factors(self):
+        return self.__factors
+
+    def get_alternatives(self):
+        return self.__alternatives
 
     def set_factors_compare_matrix_element(self, row_num, column_num, value):
         self.__factors_compare_matrix.set_matrix_element(row_num, column_num, value)
@@ -155,12 +161,29 @@ class RelativeMeasurement(object):
     def set_alternatives_compare_matrixes_elements(self, matrix_num, array):
         self.__alternatives_compare_matrixes[matrix_num - 1].set_matrix(array)
 
+    def get_weights(self):
+        return self.get_weights()
+
     def calculate(self):
         self.__factors_compare_matrix.calculate()
         for i in range(len(self.__factors)):
             self.__alternatives_compare_matrixes[i].calculate()
 
+        for i in range(len(self.__alternatives)):
+            for j in range(len(self.__factors)):
+                self.__weights[i] += (self.__alternatives_compare_matrixes[j].get_weights()[i] *
+                                      self.__factors_compare_matrix.get_weights()[j])
+
+    def get_unsorted_result(self):
+        return ut.glue_result(self.__alternatives, self.__weights, False)
+
+    def get_sorted_result(self):
+        return ut.glue_result(self.__alternatives, self.__weights, True)
+
     def to_string(self):
+        round_result = self.get_sorted_result()
+        for i in range(len(self.__alternatives)):
+            round_result[i][2] = round(round_result[i][2], 3)
         result = '=============================================================================' + '\n'
         result += '** Factors compare matrix **' + '\n'
         result += self.__factors_compare_matrix.to_string() + '\n\n'
@@ -170,4 +193,10 @@ class RelativeMeasurement(object):
             result += '-----------------------------------------------------------------------------' + '\n'
             result += '* Comparing by factor ' + str(i + 1) + ': "' + self.__factors[i] + '"' + ' * \n'
             result += self.__alternatives_compare_matrixes[i].to_string() + '\n\n'
+        result += '=============================================================================' + '\n'
+        result += '** Weigts **' + '\n'
+        result += str([round(v, 3) for v in self.__weights]) + '\n\n'
+        result += '-----------------------------------------------------------------------------' + '\n'
+        result += 'Sorted result = ' + '\n' + str(round_result)
+
         return result
