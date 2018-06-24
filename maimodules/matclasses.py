@@ -106,21 +106,18 @@ class PairedComparisonMatrix(object):
         return ut.glue_result(self.__categories, self.get_weights(), True)
 
     def to_string(self):
-        round_matrix = self.get_matrix()
-        for i in range(self.__n):
-            for j in range(self.__n):
-                round_matrix[i, j] = round(round_matrix[i, j], 3)
+        round_digits_num = 2
         round_result = self.get_sorted_result()
         for i in range(self.__n):
-            round_result[i][2] = round(round_result[i][2], 3)
+            round_result[i][2] = round(round_result[i][2], round_digits_num)
         return ('Categories = ' + '\n' + str(self.get_categories()) + '\n' +
-                'Matrix = ' + '\n' + str(round_matrix) + '\n' +
-                'Main eigenvalue = ' + str(round(self.get_main_eigenvalue(), 3)) + '\n' +
+                'Matrix = ' + '\n' + str(ut.round_matrix(self.__matrix, round_digits_num)) + '\n' +
+                'Main eigenvalue = ' + str(round(self.get_main_eigenvalue(), round_digits_num)) + '\n' +
                 'Main eigenvector = ' + '\n' +
-                str([round(v, 3) for v in self.__main_eigenvector]) + '\n' +
-                'Weights = ' + '\n' + str([round(v, 3) for v in self.get_weights()]) + '\n' +
-                'C.I. = ' + str(round(self.get_consistency_index(), 3)) + '\n' +
-                'C.R. = ' + str(round(self.get_consistency_ratio(), 3)) + '\n' +
+                str(ut.round_vector(self.__main_eigenvector, round_digits_num)) + '\n' +
+                'Weights = ' + '\n' + str(ut.round_vector(self.get_weights(), round_digits_num)) + '\n' +
+                'C.I. = ' + str(round(self.get_consistency_index(), round_digits_num)) + '\n' +
+                'C.R. = ' + str(round(self.get_consistency_ratio(), round_digits_num)) + '\n' +
                 'Sorted result = ' + '\n' + str(round_result))
 
 
@@ -181,9 +178,12 @@ class RelativeMeasurement(object):
         return ut.glue_result(self.__alternatives, self.__weights, True)
 
     def to_string(self):
+        round_digits_num = 3
+
         round_result = self.get_sorted_result()
         for i in range(len(self.__alternatives)):
-            round_result[i][2] = round(round_result[i][2], 3)
+            round_result[i][2] = round(round_result[i][2], round_digits_num)
+
         result = '=============================================================================' + '\n'
         result += '** Factors compare matrix **' + '\n'
         result += self.__factors_compare_matrix.to_string() + '\n\n'
@@ -195,7 +195,7 @@ class RelativeMeasurement(object):
             result += self.__alternatives_compare_matrixes[i].to_string() + '\n\n'
         result += '=============================================================================' + '\n'
         result += '** Weigts **' + '\n'
-        result += str([round(v, 3) for v in self.__weights]) + '\n\n'
+        result += str(ut.round_vector(self.__weights, round_digits_num)) + '\n\n'
         result += '-----------------------------------------------------------------------------' + '\n'
         result += 'Sorted result = ' + '\n' + str(round_result)
 
