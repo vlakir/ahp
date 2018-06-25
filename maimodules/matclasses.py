@@ -28,7 +28,7 @@ class PairedComparisonMatrix(object):
     def set_matrix(self, array):
         for i in range(self.__n):
             for j in range(self.__n):
-                self.set_matrix_element(i, j, array[i - 1, j - 1])
+                self.set_matrix_element(i + 1, j + 1, array[i][j])
 
     def get_matrix(self):
         return self.__matrix
@@ -200,3 +200,25 @@ class RelativeMeasurement(object):
         result += 'Sorted result = ' + '\n' + str(round_result)
 
         return result
+
+
+def make_relative_measurement_from_csv(factor_file_path, alternatives_file_path,
+                                       factors_compare_array_file_path, alternatives_compare_arrays_path):
+    factors = ut.csv_to_list(factor_file_path, 1)
+    alternatives = ut.csv_to_list(alternatives_file_path, 1)
+
+    factors_num = len(factors)
+    alternatives_num = len(alternatives)
+
+    factors_compare_array = ut.str_list_to_float(ut.csv_to_list(factors_compare_array_file_path, 0))
+
+    alternatives_compare_arrays = ut.str_list_to_float(ut.csv_to_list(alternatives_compare_arrays_path, 0))
+
+    relative_measurement = RelativeMeasurement(alternatives, factors)
+    relative_measurement.set_factors_compare_matrix_elements(factors_compare_array)
+
+    for i in range(factors_num):
+        (relative_measurement.set_alternatives_compare_matrixes_elements
+         (i + 1, alternatives_compare_arrays[alternatives_num * i:alternatives_num * (i + 1)]))
+
+    return relative_measurement
