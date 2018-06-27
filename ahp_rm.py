@@ -1,5 +1,4 @@
 import maimodules.matclasses as mc
-import sys
 
 
 (relative_measurement,
@@ -15,7 +14,6 @@ import sys
                                            'alternatives.csv',
                                            'factors_compare_array.csv',
                                            'alternatives_compare_arrays.csv'))
-
 if not is_factor_file_found:
     print("Factors file is not found")
     # 2DO: вводим интерактивно
