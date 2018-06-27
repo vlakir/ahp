@@ -180,19 +180,6 @@ class RelativeMeasurement(object):
     @staticmethod
     def make_self_from_csv(factor_file_path, alternatives_file_path,
                            factors_compare_array_file_path, alternatives_compare_arrays_file_path):
-        factors = []
-        alternatives = []
-        factors_compare_array = []
-        alternatives_compare_arrays = []
-
-        is_factor_file_found = False
-        is_factor_file_correct = False
-        is_alternatives_file_found = False
-        is_alternatives_file_correct = False
-        is_factors_compare_file_found = False
-        is_factors_compare_file_correct = False
-        is_alternatives_compares_file_found = False
-        is_alternatives_compares_file_correct = False
 
         try:
             factors = ut.csv_to_list(factor_file_path)
@@ -206,6 +193,7 @@ class RelativeMeasurement(object):
             is_factor_file_found = False
             is_factor_file_correct = False
             factors_num = 0
+            factors = []
 
         try:
             alternatives = ut.csv_to_list(alternatives_file_path)
@@ -219,6 +207,7 @@ class RelativeMeasurement(object):
             is_alternatives_file_found = False
             is_alternatives_file_correct = False
             alternatives_num = 0
+            alternatives = []
 
         try:
             factors_compare_array = ut.str_list_to_float(ut.csv_to_list(factors_compare_array_file_path))
@@ -228,16 +217,19 @@ class RelativeMeasurement(object):
         except FileNotFoundError:
             is_factors_compare_file_found = False
             is_factors_compare_file_correct = False
-
+            factors_compare_array = []
 
         try:
             alternatives_compare_arrays = ut.str_list_to_float(ut.csv_to_list(alternatives_compare_arrays_file_path))
             is_alternatives_compares_file_found = True
-            is_alternatives_compares_file_correct = ((len(alternatives_compare_arrays) == factors_num * alternatives_num)
-                                                     and (len(alternatives_compare_arrays[0]) == alternatives_num))
+            is_alternatives_compares_file_correct = ((len(alternatives_compare_arrays) ==
+                                                      factors_num * alternatives_num)
+                                                     and (len(alternatives_compare_arrays[0]) ==
+                                                          alternatives_num))
         except FileNotFoundError:
             is_alternatives_compares_file_found = False
             is_alternatives_compares_file_correct = False
+            alternatives_compare_arrays = []
 
         if is_factor_file_correct and is_alternatives_file_correct:
             relative_measurement = RelativeMeasurement(alternatives[0], factors[0])
@@ -259,9 +251,6 @@ class RelativeMeasurement(object):
                 is_factors_compare_file_correct,
                 is_alternatives_compares_file_found,
                 is_alternatives_compares_file_correct)
-
-
-
 
     def to_string(self):
         round_digits_num = 3
@@ -286,6 +275,3 @@ class RelativeMeasurement(object):
         result += 'Sorted result = ' + '\n' + str(round_result)
 
         return result
-
-
-
