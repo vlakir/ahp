@@ -22,13 +22,10 @@ def round_matrix(matrix, digits_num):
     return result
 
 
-def csv_to_list(file_path, lines_to_read):
+def csv_to_list(file_path):
     with open(file_path, newline='', encoding='utf-8') as file_obj:
         reader = csv.reader(file_obj)
-        if lines_to_read != 0:
-            result = list(reader)[lines_to_read-1]
-        else:  # read all rows
-            result = list(reader)
+        result = list(reader)
     return result
 
 
