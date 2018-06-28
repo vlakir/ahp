@@ -2,10 +2,18 @@ import maimodules.matclasses as mc
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-f', '--factors')
-parser.add_argument('-a', '--alternatives')
-parser.add_argument('-fc', '--factors_compare_array')
-parser.add_argument('-ac', '--alternatives_compare_arrays')
+parser.add_argument('-f', '--factors',
+                    help='Path to .csv file with list of factors',
+                    metavar='PATH')
+parser.add_argument('-a', '--alternatives',
+                    help='Path to .csv file with list of alternatives',
+                    metavar='PATH')
+parser.add_argument('-fc', '--factors-compare-array',
+                    help='Path to .csv file with factors compare array',
+                    metavar='PATH')
+parser.add_argument('-ac', '--alternatives-compare-arrays',
+                    help='Path to .csv file with alternatives compare arrays',
+                    metavar='PATH')
 
 namespace = parser.parse_args()
 

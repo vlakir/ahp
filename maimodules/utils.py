@@ -28,6 +28,8 @@ def csv_to_list(file_path):
         result = list(reader)
     return result
 
+# def list_to_csv(file_path): #2DO
+
 
 def str_list_to_float(processing_list):
     for i in range(len(processing_list)):
