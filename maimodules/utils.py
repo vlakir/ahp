@@ -28,7 +28,13 @@ def csv_to_list(file_path):
         result = list(reader)
     return result
 
-# def list_to_csv(file_path): #2DO
+
+def list_to_csv(file_path, list_to_write):
+    with open(file_path, "w", newline='', encoding='utf-8') as file_obj:
+        writer = csv.writer(file_obj, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
+        print(list_to_write)
+        for line in list_to_write:
+            writer.writerow(line)
 
 
 def str_list_to_float(processing_list):

@@ -1,7 +1,11 @@
 import maimodules.matclasses as mc
+import maimodules.utils as ut
 import argparse
 
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(
+    description='''Realisation of AHP relative method by T.Saaty''',
+    epilog='''(c) vlakir 2018''')
+
 parser.add_argument('-f', '--factors',
                     help='Path to .csv file with list of factors',
                     metavar='PATH')
@@ -62,5 +66,12 @@ if relative_measurement is not None:
     print("Loaded from csv-files data is enough")
     relative_measurement.calculate()
     print(relative_measurement.get_sorted_result())
+
+    ut.list_to_csv('factors_result.csv', [relative_measurement.get_factors()])
+    ut.list_to_csv('alternatives_result.csv', [relative_measurement.get_alternatives()])
+    ut.list_to_csv('factors_compare_array_result.csv', relative_measurement.get_factors_compare_matrix().get_matrix())
+    # 2DO
+    # ut.list_to_csv('alternatives_compare_matrixes.csv', relative_measurement.get_alternatives_compare_matrixes())
+
 else:
     print("Loaded from csv-files data is NOT enough")

@@ -134,6 +134,12 @@ class RelativeMeasurement(object):
             acm.set_categories(self.__alternatives)
             self.__alternatives_compare_matrixes.append(acm)
 
+    def get_factors_compare_matrix(self):
+        return self.__factors_compare_matrix
+
+    def get_alternatives_compare_matrixes(self):
+        return self.__alternatives_compare_matrixes
+
     def get_factors_count(self):
         return len(self.__factors)
 
