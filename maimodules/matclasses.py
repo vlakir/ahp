@@ -181,76 +181,70 @@ class RelativeMeasurement(object):
     def make_self_from_csv(factor_file_path, alternatives_file_path,
                            factors_compare_array_file_path, alternatives_compare_arrays_file_path):
 
+        file_checker = FileChecker()
+
         try:
             factors = ut.csv_to_list(factor_file_path)
-            is_factor_file_found = True
-            is_factor_file_correct = (len(factors) == 1)
-            if is_factor_file_correct:
+            file_checker.is_factor_file_found = True
+            file_checker.is_factor_file_correct = (len(factors) == 1)
+            if file_checker.is_factor_file_correct:
                 factors_num = len(factors[0])
             else:
                 factors_num = 0
         except FileNotFoundError:
-            is_factor_file_found = False
-            is_factor_file_correct = False
+            file_checker.is_factor_file_found = False
+            file_checker.is_factor_file_correct = False
             factors_num = 0
             factors = []
 
         try:
             alternatives = ut.csv_to_list(alternatives_file_path)
-            is_alternatives_file_found = True
-            is_alternatives_file_correct = (len(alternatives) == 1)
-            if is_alternatives_file_correct:
+            file_checker.is_alternatives_file_found = True
+            file_checker.is_alternatives_file_correct = (len(alternatives) == 1)
+            if file_checker.is_alternatives_file_correct:
                 alternatives_num = len(alternatives[0])
             else:
                 alternatives_num = 0
         except FileNotFoundError:
-            is_alternatives_file_found = False
-            is_alternatives_file_correct = False
+            file_checker.is_alternatives_file_found = False
+            file_checker.is_alternatives_file_correct = False
             alternatives_num = 0
             alternatives = []
 
         try:
             factors_compare_array = ut.str_list_to_float(ut.csv_to_list(factors_compare_array_file_path))
-            is_factors_compare_file_found = True
-            is_factors_compare_file_correct = ((len(factors_compare_array) == factors_num)
-                                               and (len(factors_compare_array[0]) == factors_num))
+            file_checker.is_factors_compare_file_found = True
+            file_checker.is_factors_compare_file_correct = ((len(factors_compare_array) == factors_num)
+                                                            and (len(factors_compare_array[0]) == factors_num))
         except FileNotFoundError:
-            is_factors_compare_file_found = False
-            is_factors_compare_file_correct = False
+            file_checker.is_factors_compare_file_found = False
+            file_checker.is_factors_compare_file_correct = False
             factors_compare_array = []
 
         try:
             alternatives_compare_arrays = ut.str_list_to_float(ut.csv_to_list(alternatives_compare_arrays_file_path))
-            is_alternatives_compares_file_found = True
-            is_alternatives_compares_file_correct = ((len(alternatives_compare_arrays) ==
-                                                      factors_num * alternatives_num)
-                                                     and (len(alternatives_compare_arrays[0]) ==
-                                                          alternatives_num))
+            file_checker.is_alternatives_compares_file_found = True
+            file_checker.is_alternatives_compares_file_correct = ((len(alternatives_compare_arrays) ==
+                                                                  factors_num * alternatives_num)
+                                                                  and (len(alternatives_compare_arrays[0]) ==
+                                                                  alternatives_num))
         except FileNotFoundError:
-            is_alternatives_compares_file_found = False
-            is_alternatives_compares_file_correct = False
+            file_checker.is_alternatives_compares_file_found = False
+            file_checker.is_alternatives_compares_file_correct = False
             alternatives_compare_arrays = []
 
-        if is_factor_file_correct and is_alternatives_file_correct:
+        if file_checker.is_factor_file_correct and file_checker.is_alternatives_file_correct:
             relative_measurement = RelativeMeasurement(alternatives[0], factors[0])
-            if is_factors_compare_file_correct:
+            if file_checker.is_factors_compare_file_correct:
                 relative_measurement.set_factors_compare_matrix_elements(factors_compare_array)
-            if is_alternatives_compares_file_correct:
+            if file_checker.is_alternatives_compares_file_correct:
                 for i in range(factors_num):
                     (relative_measurement.set_alternatives_compare_matrixes_elements
                      (i + 1, alternatives_compare_arrays[alternatives_num * i:alternatives_num * (i + 1)]))
         else:
             relative_measurement = None
 
-        return (relative_measurement,
-                is_factor_file_found,
-                is_factor_file_correct,
-                is_alternatives_file_found,
-                is_alternatives_file_correct,
-                is_factors_compare_file_found,
-                is_factors_compare_file_correct,
-                is_alternatives_compares_file_found,
-                is_alternatives_compares_file_correct)
+        return relative_measurement, file_checker
 
     def to_string(self):
         round_digits_num = 3
@@ -275,3 +269,15 @@ class RelativeMeasurement(object):
         result += 'Sorted result = ' + '\n' + str(round_result)
 
         return result
+
+
+class FileChecker(object):
+    def __init__(self):
+        self.is_factor_file_found = False
+        self.is_factor_file_correct = False
+        self.is_alternatives_file_found = False
+        self.is_alternatives_file_correct = False
+        self.is_factors_compare_file_found = False
+        self.is_factors_compare_file_correct = False
+        self.is_alternatives_compares_file_found = False
+        self.is_alternatives_compares_file_correct = False
