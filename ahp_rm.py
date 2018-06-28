@@ -1,11 +1,19 @@
 import maimodules.matclasses as mc
+import argparse
 
+parser = argparse.ArgumentParser()
+parser.add_argument('-f', '--factors')
+parser.add_argument('-a', '--alternatives')
+parser.add_argument('-fc', '--factors_compare_array')
+parser.add_argument('-ac', '--alternatives_compare_arrays')
+
+namespace = parser.parse_args()
 
 (relative_measurement, file_checker) = (mc.RelativeMeasurement.make_self_from_csv
-                                        ('factors.csv',
-                                         'alternatives.csv',
-                                         'factors_compare_array.csv',
-                                         'alternatives_compare_arrays.csv'))
+                                        (str(namespace.factors),
+                                         str(namespace.alternatives),
+                                         str(namespace.factors_compare_array),
+                                         str(namespace.alternatives_compare_arrays)))
 if not file_checker.is_factor_file_found:
     print("Factors file is not found")
     # 2DO: вводим интерактивно
@@ -45,6 +53,6 @@ else:
 if relative_measurement is not None:
     print("Loaded from csv-files data is enough")
     relative_measurement.calculate()
-    # print(relative_measurement.to_string())
+    print(relative_measurement.get_sorted_result())
 else:
     print("Loaded from csv-files data is NOT enough")
