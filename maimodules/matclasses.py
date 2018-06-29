@@ -197,6 +197,7 @@ class RelativeMeasurement(object):
                 factors_num = len(factors[0])
             else:
                 factors_num = 0
+                factors = []
         except FileNotFoundError:
             file_checker.is_factor_file_found = False
             file_checker.is_factor_file_correct = False
@@ -211,6 +212,7 @@ class RelativeMeasurement(object):
                 alternatives_num = len(alternatives[0])
             else:
                 alternatives_num = 0
+                alternatives = []
         except FileNotFoundError:
             file_checker.is_alternatives_file_found = False
             file_checker.is_alternatives_file_correct = False
