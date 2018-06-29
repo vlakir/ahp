@@ -184,8 +184,8 @@ class RelativeMeasurement(object):
         return ut.glue_result(self.__alternatives, self.__weights, True)
 
     @staticmethod
-    def make_self_from_csv(factor_file_path, alternatives_file_path,
-                           factors_compare_array_file_path, alternatives_compare_arrays_file_path):
+    def load_from_csv(factor_file_path, alternatives_file_path,
+                      factors_compare_array_file_path, alternatives_compare_arrays_file_path):
 
         file_checker = FileChecker()
 
@@ -251,6 +251,26 @@ class RelativeMeasurement(object):
             relative_measurement = None
 
         return relative_measurement, file_checker
+
+    def save_to_csv(self, factor_file_path, alternatives_file_path,
+                      factors_compare_array_file_path, alternatives_compare_arrays_file_path):
+        ut.list_to_csv(factor_file_path, [self.get_factors()])
+        ut.list_to_csv(alternatives_file_path, [self.get_alternatives()])
+        ut.list_to_csv(factors_compare_array_file_path,
+                       self.get_factors_compare_matrix().get_matrix())
+
+        alternatives_compare_arrays = []
+        alternatives_compare_matrixes = self.get_alternatives_compare_matrixes()
+        for i in range(self.get_factors_count()):
+            alternatives_compare_matrix = alternatives_compare_matrixes[i]
+            for j in range(self.get_alternatives_count()):
+                row = []
+                for k in range(self.get_alternatives_count()):
+                    row.append(alternatives_compare_matrix.get_matrix_element(j + 1, k + 1))
+                alternatives_compare_arrays.append(row)
+        ut.list_to_csv(alternatives_compare_arrays_file_path, alternatives_compare_arrays)
+
+
 
     def to_string(self):
         round_digits_num = 3

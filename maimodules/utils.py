@@ -32,7 +32,7 @@ def csv_to_list(file_path):
 def list_to_csv(file_path, list_to_write):
     with open(file_path, "w", newline='', encoding='utf-8') as file_obj:
         writer = csv.writer(file_obj, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
-        print(list_to_write)
+        # print(list_to_write)
         for line in list_to_write:
             writer.writerow(line)
 

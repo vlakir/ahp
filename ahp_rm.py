@@ -1,5 +1,4 @@
 import maimodules.matclasses as mc
-import maimodules.utils as ut
 import argparse
 
 parser = argparse.ArgumentParser(
@@ -21,7 +20,7 @@ parser.add_argument('-ac', '--alternatives-compare-arrays',
 
 namespace = parser.parse_args()
 
-(relative_measurement, file_checker) = (mc.RelativeMeasurement.make_self_from_csv
+(relative_measurement, file_checker) = (mc.RelativeMeasurement.load_from_csv
                                         (str(namespace.factors),
                                          str(namespace.alternatives),
                                          str(namespace.factors_compare_array),
@@ -66,12 +65,9 @@ if relative_measurement is not None:
     print("Loaded from csv-files data is enough")
     relative_measurement.calculate()
     print(relative_measurement.get_sorted_result())
-
-    ut.list_to_csv('factors_result.csv', [relative_measurement.get_factors()])
-    ut.list_to_csv('alternatives_result.csv', [relative_measurement.get_alternatives()])
-    ut.list_to_csv('factors_compare_array_result.csv', relative_measurement.get_factors_compare_matrix().get_matrix())
-    # 2DO
-    # ut.list_to_csv('alternatives_compare_matrixes.csv', relative_measurement.get_alternatives_compare_matrixes())
-
+    relative_measurement.save_to_csv('factors_result.csv',
+                                     'alternatives_result.csv',
+                                     'factors_compare_array_result.csv',
+                                     'alternatives_compare_arrays_result.csv')
 else:
     print("Loaded from csv-files data is NOT enough")
