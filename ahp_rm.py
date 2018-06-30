@@ -45,10 +45,13 @@ else:
 
 relative_measurement.calculate()
 print(relative_measurement.get_sorted_result())
-relative_measurement.save_to_csv('result_' + args.factors,
-                                 'result_' + args.alternatives,
-                                 'result_' + args.factors_compare_array,
-                                 'result_' + args.alternatives_compare_arrays)
 
-relative_measurement.string_to_file(args.result)
+results_folder = './results/'
+
+relative_measurement.save_to_csv(results_folder + args.factors,
+                                 results_folder + args.alternatives,
+                                 results_folder + args.factors_compare_array,
+                                 results_folder + args.alternatives_compare_arrays)
+
+relative_measurement.string_to_file(results_folder + args.result)
 

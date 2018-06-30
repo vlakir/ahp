@@ -1,4 +1,12 @@
 import csv
+import os
+
+
+def ensure_dir(file_path):
+    directory = os.path.dirname(file_path)
+    if not directory == '':
+        if not os.path.exists(directory):
+            os.makedirs(directory)
 
 
 def glue_result(categories, weights, is_sort):
@@ -30,6 +38,7 @@ def csv_to_list(file_path):
 
 
 def list_to_csv(file_path, list_to_write):
+    ensure_dir(file_path)
     with open(file_path, "w", newline='', encoding='utf-8') as file_obj:
         writer = csv.writer(file_obj, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
         # print(list_to_write)
