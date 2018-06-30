@@ -30,7 +30,7 @@ else:
 
 relative_measurement.calculate()
 print(relative_measurement.get_sorted_result())
-relative_measurement.save_to_csv('factors_result.csv',
-                                 'alternatives_result.csv',
-                                 'factors_compare_array_result.csv',
-                                 'alternatives_compare_arrays_result.csv')
+relative_measurement.save_to_csv(str(args_namespace.factors),
+                                 str(args_namespace.alternatives),
+                                 str(args_namespace.factors_compare_array),
+                                 str(args_namespace.alternatives_compare_arrays))

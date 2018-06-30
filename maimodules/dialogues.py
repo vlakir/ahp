@@ -5,16 +5,16 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description='''Realisation of AHP relative method by T.Saaty''',
         epilog='''(c) vlakir 2018''')
-    parser.add_argument('-f', '--factors',
+    parser.add_argument('-f', '--factors', default='factors.csv',
                         help='Path to .csv file with list of factors',
                         metavar='PATH')
-    parser.add_argument('-a', '--alternatives',
+    parser.add_argument('-a', '--alternatives', default='alternatives.csv',
                         help='Path to .csv file with list of alternatives',
                         metavar='PATH')
-    parser.add_argument('-fc', '--factors-compare-array',
+    parser.add_argument('-fc', '--factors-compare-array', default='factors_compare.csv',
                         help='Path to .csv file with factors compare array',
                         metavar='PATH')
-    parser.add_argument('-ac', '--alternatives-compare-arrays',
+    parser.add_argument('-ac', '--alternatives-compare-arrays', default='alternatives_compares.csv',
                         help='Path to .csv file with alternatives compare arrays',
                         metavar='PATH')
     namespace = parser.parse_args()

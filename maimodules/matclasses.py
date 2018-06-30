@@ -255,7 +255,7 @@ class RelativeMeasurement(object):
         return relative_measurement, file_checker
 
     def save_to_csv(self, factor_file_path, alternatives_file_path,
-                      factors_compare_array_file_path, alternatives_compare_arrays_file_path):
+                    factors_compare_array_file_path, alternatives_compare_arrays_file_path):
         ut.list_to_csv(factor_file_path, [self.get_factors()])
         ut.list_to_csv(alternatives_file_path, [self.get_alternatives()])
         ut.list_to_csv(factors_compare_array_file_path,
@@ -271,8 +271,6 @@ class RelativeMeasurement(object):
                     row.append(alternatives_compare_matrix.get_matrix_element(j + 1, k + 1))
                 alternatives_compare_arrays.append(row)
         ut.list_to_csv(alternatives_compare_arrays_file_path, alternatives_compare_arrays)
-
-
 
     def to_string(self):
         round_digits_num = 3
