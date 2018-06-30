@@ -17,6 +17,13 @@ def parse_args():
     parser.add_argument('-ac', '--alternatives-compare-arrays', default='alternatives_compares.csv',
                         help='Path to .csv file with alternatives compare arrays',
                         metavar='PATH')
+    parser.add_argument('-r', '--result', default='result.txt',
+                        help='Path to .txt file with full solution expaination',
+                        metavar='PATH')
+    parser.add_argument('-i', '--interactive-input', action='store_const', const=True,
+                        help='Ignore filepaths. All values will be asked interactively',
+                        metavar='PATH')
+
     namespace = parser.parse_args()
     return namespace
 
@@ -55,6 +62,10 @@ def alternatives_compares_file_info(file_checker):
         print("Alternatives compares file is not correct")
     else:
         print("Alternatives compares file is loaded and checked")
+
+
+def interactive_input_info():
+    print("You have to enter all values manually.")
 
 
 def input_factors():

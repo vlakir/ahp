@@ -20,7 +20,10 @@ class PairedComparisonMatrix(object):
             self.__matrix[row_num - 1, column_num - 1] = 1
         else:
             self.__matrix[row_num - 1, column_num - 1] = value
-            self.__matrix[column_num - 1, row_num - 1] = 1 / value
+            if not value == 0:
+                self.__matrix[column_num - 1, row_num - 1] = 1 / value
+            else:
+                self.__matrix[column_num - 1, row_num - 1] = 0
 
     def get_matrix_element(self, row_num, column_num):
         return self.__matrix[row_num - 1, column_num - 1]
@@ -77,8 +80,8 @@ class PairedComparisonMatrix(object):
 
     def get_consistency_ratio(self):
         n_to_ri = {
-            1: 0,
-            2: 0,
+            1: 0.01,
+            2: 0.01,
             3: 0.52,
             4: 0.89,
             5: 1.11,
@@ -119,6 +122,13 @@ class PairedComparisonMatrix(object):
                 'C.I. = ' + str(round(self.get_consistency_index(), round_digits_num)) + '\n' +
                 'C.R. = ' + str(round(self.get_consistency_ratio(), round_digits_num)) + '\n' +
                 'Sorted result = ' + '\n' + str(round_result))
+
+    # 2DO def load_from_csv
+    # 2DO def save_to_csv
+
+    def string_to_file(self, file_name):
+        file = open(file_name, 'w')
+        file.write(self.to_string())
 
 
 class RelativeMeasurement(object):
@@ -295,6 +305,10 @@ class RelativeMeasurement(object):
         result += 'Sorted result = ' + '\n' + str(round_result)
 
         return result
+
+    def string_to_file(self, file_name):
+        file = open(file_name, 'w')
+        file.write(self.to_string())
 
 
 class FileChecker(object):
