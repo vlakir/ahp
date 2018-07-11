@@ -81,6 +81,7 @@ def input_alternatives():
 # 2DO: CR check
 def input_factors_compare(relative_measurement):
     print("You have to enter factors compare matrix manually.")
+    __print_rate_instruction()
     factors = relative_measurement.get_factors()
     for i in range(1, relative_measurement.get_factors_count() + 1):
         for j in range(1, relative_measurement.get_factors_count() + 1):
@@ -93,6 +94,7 @@ def input_factors_compare(relative_measurement):
 # 2DO: CR check
 def input_alternatives_compares(relative_measurement):
     print("You have to enter alternatives compare matrixes manually.")
+    __print_rate_instruction()
     factors = relative_measurement.get_factors()
     alternatives = relative_measurement.get_alternatives()
     for k in range(relative_measurement.get_factors_count()):
@@ -132,3 +134,19 @@ def __input_rate(question):
             return num
         except ValueError:
             print('You must enter only integer number from -8 to 8! Try again. \n')
+
+
+def __print_rate_instruction():
+    insruction = ('Rating instruction:\n' +
+                  'Rate\tDefenition\n' +
+                  '0\t\tEqual preference\n' +
+                  '1\t\tSmall preference\n' +
+                  '2\t\tMedium Preference\n' +
+                  '3\t\tAbove medium preference above medium\n' +
+                  '4\t\tModerately strong preference\n' +
+                  '5\t\tStrong preference\n' +
+                  '6\t\tVery strong preference\n' +
+                  '7\t\tVery, very strong preference\n' +
+                  '8\t\tAbsolute preference\n' +
+                  'Negative values [-8 -1] correspond to the inversion of the compared entities positions\n')
+    print(insruction)
