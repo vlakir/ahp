@@ -91,7 +91,16 @@ def input_factors_compare(relative_measurement):
 
 def input_alternatives_compares(relative_measurement):
     print("You have to enter alternatives compare matrixes manually.")
-    # 2DO
+    factors = relative_measurement.get_factors()
+    alternatives = relative_measurement.get_alternatives()
+    for k in range(relative_measurement.get_factors_count()):
+        print('Compare alternatives by factor "%s"' % factors[k])
+        for i in range(1, relative_measurement.get_alternatives_count() + 1):
+            for j in range(1, relative_measurement.get_alternatives_count() + 1):
+                if (j - i) > 0:
+                    question = 'Rate the alternative "%s" compared to the alternative "%s" [-8; 8] ' \
+                               % (alternatives[i - 1], alternatives[j - 1])
+                    relative_measurement.set_alternatives_compare_matrixes_element(k + 1, i, j, __input_rate(question))
 
 
 def __input_list(len_question, enter_sentence):
