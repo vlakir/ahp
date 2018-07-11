@@ -78,6 +78,7 @@ def input_alternatives():
     return __input_list("How many alternatives do you want to use? ", "Enter name of alternative №")
 
 
+# 2DO: CR check
 def input_factors_compare(relative_measurement):
     print("You have to enter factors compare matrix manually.")
     factors = relative_measurement.get_factors()
@@ -89,6 +90,7 @@ def input_factors_compare(relative_measurement):
                 relative_measurement.set_factors_compare_matrix_element(i, j, __input_rate(question))
 
 
+# 2DO: CR check
 def input_alternatives_compares(relative_measurement):
     print("You have to enter alternatives compare matrixes manually.")
     factors = relative_measurement.get_factors()
