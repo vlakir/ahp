@@ -80,7 +80,13 @@ def input_alternatives():
 
 def input_factors_compare(relative_measurement):
     print("You have to enter factors compare matrix manually.")
-    # 2DO
+    factors = relative_measurement.get_factors()
+    for i in range(1, relative_measurement.get_factors_count() + 1):
+        for j in range(1, relative_measurement.get_factors_count() + 1):
+            if (j - i) > 0:
+                question = 'Rate the importance of factor "%s" compared to factor "%s" [-8; 8] ' \
+                           % (factors[i - 1], factors[j - 1])
+                relative_measurement.set_factors_compare_matrix_element(i, j, __input_rate(question))
 
 
 def input_alternatives_compares(relative_measurement):
@@ -94,3 +100,18 @@ def __input_list(len_question, enter_sentence):
     for i in range(num):
         result.append(input(enter_sentence + str(i + 1) + ": "))
     return result
+
+
+def __input_rate(question):
+    while 1:
+        try:
+            num = int(input(question))
+            if num not in (-8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8):
+                raise ValueError()
+            if num >= 0:
+                num += 1
+            else:
+                num = 1 / (abs(num) + 1)
+            return num
+        except ValueError:
+            print('You must enter only integer digits from -8 to 8! Try again. \n')
