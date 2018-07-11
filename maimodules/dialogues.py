@@ -104,11 +104,17 @@ def input_alternatives_compares(relative_measurement):
 
 
 def __input_list(len_question, enter_sentence):
-    num = int(input(len_question))
-    result = []
-    for i in range(num):
-        result.append(input(enter_sentence + str(i + 1) + ": "))
-    return result
+    while 1:
+        try:
+            num = int(input(len_question))
+            if num < 1:
+                raise ValueError()
+            result = []
+            for i in range(num):
+                result.append(input(enter_sentence + str(i + 1) + ": "))
+            return result
+        except ValueError:
+            print('You must enter only positive integer number! Try again. \n')
 
 
 def __input_rate(question):
@@ -123,4 +129,4 @@ def __input_rate(question):
                 num = 1 / (abs(num) + 1)
             return num
         except ValueError:
-            print('You must enter only integer digits from -8 to 8! Try again. \n')
+            print('You must enter only integer number from -8 to 8! Try again. \n')
