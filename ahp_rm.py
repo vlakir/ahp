@@ -1,6 +1,9 @@
 import maimodules.matclasses as mc
 import maimodules.dialogues as dl
 
+dl.init_dialogues()
+
+# print(dl.input_yes_no('Are you ready (y/n): '))
 
 args = dl.parse_args()
 

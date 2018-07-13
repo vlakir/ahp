@@ -1,4 +1,9 @@
 import argparse
+import gettext
+
+
+def init_dialogues():
+    gettext.install('ahp_rm', './locale')
 
 
 def parse_args():
@@ -30,81 +35,97 @@ def parse_args():
 
 def factors_file_info(file_checker):
     if not file_checker.is_factor_file_found:
-        print("Factors file is not found.")
+        print(_("Factors file is not found."))
     elif not file_checker.is_factor_file_correct:
-        print("Factors file is not correct.")
+        print(_("Factors file is not correct."))
     else:
-        print("Factors file is loaded and checked")
+        print(_("Factors file is loaded and checked"))
 
 
 def alternatives_file_info(file_checker):
     if not file_checker.is_alternatives_file_found:
-        print("Alternatives file is not found")
+        print(_("Alternatives file is not found"))
     elif not file_checker.is_alternatives_file_correct:
-        print("Alternatives file is not correct")
+        print(_("Alternatives file is not correct"))
     else:
-        print("Alternatives file is loaded and checked")
+        print(_("Alternatives file is loaded and checked"))
 
 
 def factors_compare_file_info(file_checker):
     if not file_checker.is_factors_compare_file_found:
-        print("Factors compare file is not found")
+        print(_("Factors compare file is not found"))
     elif not file_checker.is_factors_compare_file_correct:
-        print("Factors compare file is not correct")
+        print(_("Factors compare file is not correct"))
     else:
-        print("Factors compare file is loaded and checked")
+        print(_("Factors compare file is loaded and checked"))
 
 
 def alternatives_compares_file_info(file_checker):
     if not file_checker.is_alternatives_compares_file_found:
-        print("Alternatives compares file is not found")
+        print(_("Alternatives compares file is not found"))
     elif not file_checker.is_alternatives_compares_file_correct:
-        print("Alternatives compares file is not correct")
+        print(_("Alternatives compares file is not correct"))
     else:
-        print("Alternatives compares file is loaded and checked")
+        print(_("Alternatives compares file is loaded and checked"))
 
 
 def interactive_input_info():
-    print("You have to enter all values manually.")
+    print(_("You have to enter all values manually."))
 
 
 def input_factors():
-    print("You have to enter factors manually.")
-    return __input_list("How many factors do you want to use? ", "Enter name of factor №")
+    print(_("You have to enter factors manually."))
+    return __input_list(_("How many factors do you want to use? "), _("Enter name of factor №"))
 
 
 def input_alternatives():
-    print("You have to enter alternatives manually.")
-    return __input_list("How many alternatives do you want to use? ", "Enter name of alternative №")
+    print(_("You have to enter alternatives manually."))
+    return __input_list(_("How many alternatives do you want to use? "), _("Enter name of alternative №"))
 
 
 # 2DO: CR check
 def input_factors_compare(relative_measurement):
-    print("You have to enter factors compare matrix manually.")
+    print(_("You have to enter factors compare matrix manually."))
     __print_rate_instruction()
     factors = relative_measurement.get_factors()
     for i in range(1, relative_measurement.get_factors_count() + 1):
         for j in range(1, relative_measurement.get_factors_count() + 1):
             if (j - i) > 0:
-                question = 'Rate the importance of factor "%s" compared to factor "%s" [-8; 8] ' \
+                question = _('Rate the importance of factor "%s" compared to factor "%s" [-8; 8] ') \
                            % (factors[i - 1], factors[j - 1])
                 relative_measurement.set_factors_compare_matrix_element(i, j, __input_rate(question))
 
 
 # 2DO: CR check
 def input_alternatives_compares(relative_measurement):
-    print("You have to enter alternatives compare matrixes manually.")
+    print(_("You have to enter alternatives compare matrixes manually."))
     __print_rate_instruction()
     factors = relative_measurement.get_factors()
     alternatives = relative_measurement.get_alternatives()
     for k in range(relative_measurement.get_factors_count()):
-        print('Compare alternatives by factor "%s"' % factors[k])
+        print(_('Compare alternatives by factor "%s"') % factors[k])
         for i in range(1, relative_measurement.get_alternatives_count() + 1):
             for j in range(1, relative_measurement.get_alternatives_count() + 1):
                 if (j - i) > 0:
-                    question = 'Rate the alternative "%s" compared to the alternative "%s" [-8; 8] ' \
+                    question = _('Rate the alternative "%s" compared to the alternative "%s" [-8; 8] ') \
                                % (alternatives[i - 1], alternatives[j - 1])
                     relative_measurement.set_alternatives_compare_matrixes_element(k + 1, i, j, __input_rate(question))
+
+
+def input_yes_no(question):
+    while 1:
+        try:
+            input_str = input(question).upper()
+            local_lang_yes_upper = _('Д')
+            local_lang_no_upper = _('Н')
+            if input_str not in ('Y', 'N', local_lang_yes_upper, local_lang_no_upper):
+                raise ValueError()
+            if (input_str == 'Y') or (input_str == local_lang_yes_upper):
+                return True
+            else:
+                return False
+        except ValueError:
+            print(_('You must enter only "y" or "n"! Try again. \n'))
 
 
 def __input_list(len_question, enter_sentence):
@@ -118,7 +139,7 @@ def __input_list(len_question, enter_sentence):
                 result.append(input(enter_sentence + str(i + 1) + ": "))
             return result
         except ValueError:
-            print('You must enter only positive integer number! Try again. \n')
+            print(_('You must enter only positive integer number! Try again. \n'))
 
 
 def __input_rate(question):
@@ -133,20 +154,20 @@ def __input_rate(question):
                 num = 1 / (abs(num) + 1)
             return num
         except ValueError:
-            print('You must enter only integer number from -8 to 8! Try again. \n')
+            print(_('You must enter only integer number from -8 to 8! Try again. \n'))
 
 
 def __print_rate_instruction():
-    insruction = ('Rating instruction:\n' +
-                  'Rate\tDefenition\n' +
-                  '0\t\tEqual preference\n' +
-                  '1\t\tSmall preference\n' +
-                  '2\t\tMedium Preference\n' +
-                  '3\t\tAbove medium preference above medium\n' +
-                  '4\t\tModerately strong preference\n' +
-                  '5\t\tStrong preference\n' +
-                  '6\t\tVery strong preference\n' +
-                  '7\t\tVery, very strong preference\n' +
-                  '8\t\tAbsolute preference\n' +
-                  'Negative values [-8 -1] correspond to the inversion of the compared entities positions\n')
+    insruction = (_('Rating instruction:\n') +
+                  _('Rate\tDefenition\n') +
+                  _('0\t\tEqual preference\n') +
+                  _('1\t\tSmall preference\n') +
+                  _('2\t\tMedium Preference\n') +
+                  _('3\t\tAbove medium preference above medium\n') +
+                  _('4\t\tModerately strong preference\n') +
+                  _('5\t\tStrong preference\n') +
+                  _('6\t\tVery strong preference\n') +
+                  _('7\t\tVery, very strong preference\n') +
+                  _('8\t\tAbsolute preference\n') +
+                  _('Negative values [-8 -1] correspond to the inversion of the compared entities positions\n'))
     print(insruction)
