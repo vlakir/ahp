@@ -83,17 +83,26 @@ def input_alternatives():
     return __input_list(_("How many alternatives do you want to use? "), _("Enter name of alternative №"))
 
 
-# 2DO: CR check
 def input_factors_compare(relative_measurement):
+
     print(_("You have to enter factors compare matrix manually."))
     __print_rate_instruction()
     factors = relative_measurement.get_factors()
-    for i in range(1, relative_measurement.get_factors_count() + 1):
-        for j in range(1, relative_measurement.get_factors_count() + 1):
-            if (j - i) > 0:
-                question = _('Rate the importance of factor "%s" compared to factor "%s" [-8; 8] ') \
-                           % (factors[i - 1], factors[j - 1])
-                relative_measurement.set_factors_compare_matrix_element(i, j, __input_rate(question))
+    while 1:
+        for i in range(1, relative_measurement.get_factors_count() + 1):
+            for j in range(1, relative_measurement.get_factors_count() + 1):
+                if (j - i) > 0:
+                    question = _('Rate the importance of factor "%s" compared to factor "%s" [-8; 8] ') \
+                               % (factors[i - 1], factors[j - 1])
+                    relative_measurement.set_factors_compare_matrix_element(i, j, __input_rate(question))
+        relative_measurement.calculate()
+        cr = abs(relative_measurement.get_factors_compare_matrix().get_consistency_ratio())
+        if not __is_normal_cr(cr):
+            print('CR = %.2f' % cr)
+            if __is_rerate():
+                break
+        else:
+            break
 
 
 # 2DO: CR check
@@ -102,14 +111,28 @@ def input_alternatives_compares(relative_measurement):
     __print_rate_instruction()
     factors = relative_measurement.get_factors()
     alternatives = relative_measurement.get_alternatives()
+
     for k in range(relative_measurement.get_factors_count()):
-        print(_('Compare alternatives by factor "%s"') % factors[k])
-        for i in range(1, relative_measurement.get_alternatives_count() + 1):
-            for j in range(1, relative_measurement.get_alternatives_count() + 1):
-                if (j - i) > 0:
-                    question = _('Rate the alternative "%s" compared to the alternative "%s" [-8; 8] ') \
-                               % (alternatives[i - 1], alternatives[j - 1])
-                    relative_measurement.set_alternatives_compare_matrixes_element(k + 1, i, j, __input_rate(question))
+        while 1:
+            print(_('Compare alternatives by factor "%s"') % factors[k])
+            for i in range(1, relative_measurement.get_alternatives_count() + 1):
+                for j in range(1, relative_measurement.get_alternatives_count() + 1):
+                    if (j - i) > 0:
+                        question = _('Rate the alternative "%s" compared to the alternative "%s" [-8; 8] ') \
+                                   % (alternatives[i - 1], alternatives[j - 1])
+                        relative_measurement.set_alternatives_compare_matrixes_element(k + 1, i, j, __input_rate(question))
+            alternatives_compare_matrix = relative_measurement.get_alternatives_compare_matrixes()[k]
+            alternatives_compare_matrix.calculate()
+            cr = abs(alternatives_compare_matrix.get_consistency_ratio())
+
+            print('CR = %.2f' % cr)
+
+            if not __is_normal_cr(cr):
+                print('CR = %.2f' % cr)
+                if __is_rerate():
+                    break
+            else:
+                break
 
 
 def input_yes_no(question):
@@ -126,6 +149,17 @@ def input_yes_no(question):
                 return False
         except ValueError:
             print(_('You must enter only "y" or "n"! Try again. \n'))
+
+
+def __is_rerate():
+    return not (input_yes_no(_('There are some logical inconsistencies in your rates. Do you want to correct? (y/n) ')))
+
+
+def __is_normal_cr(cr):
+    if cr <= 0.2:
+        return True
+    else:
+        return False
 
 
 def __input_list(len_question, enter_sentence):
