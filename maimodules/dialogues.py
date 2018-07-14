@@ -1,5 +1,7 @@
 import argparse
 import gettext
+from prettytable import PrettyTable
+import maimodules.utils as ut
 
 
 def init_dialogues():
@@ -70,22 +72,22 @@ def alternatives_compares_file_info(file_checker):
 
 
 def interactive_input_info():
-    print(_("You have to enter all values manually."))
+    print(_("Interactive mode. You have to enter all values manually."))
 
 
 def input_factors():
-    print(_("You have to enter factors manually."))
+    print(_("Enter factors."))
     return __input_list(_("How many factors do you want to use? "), _("Enter name of factor №"))
 
 
 def input_alternatives():
-    print(_("You have to enter alternatives manually."))
+    print(_("Enter alternatives."))
     return __input_list(_("How many alternatives do you want to use? "), _("Enter name of alternative №"))
 
 
 def input_factors_compare(relative_measurement):
-
-    print(_("You have to enter factors compare matrix manually."))
+    print()
+    print(_("Enter factors compare matrix."))
     __print_rate_instruction()
     factors = relative_measurement.get_factors()
     while 1:
@@ -105,15 +107,16 @@ def input_factors_compare(relative_measurement):
             break
 
 
-# 2DO: CR check
 def input_alternatives_compares(relative_measurement):
-    print(_("You have to enter alternatives compare matrixes manually."))
+    print()
+    print(_("Enter alternatives compare matrixes."))
     __print_rate_instruction()
     factors = relative_measurement.get_factors()
     alternatives = relative_measurement.get_alternatives()
 
     for k in range(relative_measurement.get_factors_count()):
         while 1:
+            print()
             print(_('Compare alternatives by factor "%s"') % factors[k])
             for i in range(1, relative_measurement.get_alternatives_count() + 1):
                 for j in range(1, relative_measurement.get_alternatives_count() + 1):
@@ -124,9 +127,6 @@ def input_alternatives_compares(relative_measurement):
             alternatives_compare_matrix = relative_measurement.get_alternatives_compare_matrixes()[k]
             alternatives_compare_matrix.calculate()
             cr = abs(alternatives_compare_matrix.get_consistency_ratio())
-
-            print('CR = %.2f' % cr)
-
             if not __is_normal_cr(cr):
                 print('CR = %.2f' % cr)
                 if __is_rerate():
@@ -151,8 +151,65 @@ def input_yes_no(question):
             print(_('You must enter only "y" or "n"! Try again. \n'))
 
 
+def show_result(relative_measurement):
+    print()
+    print(get_result_str(relative_measurement))
+    print(_('See details in results.txt'))
+    print()
+
+
+def get_result_str(relative_measurement):
+    result_str =_('RESULTS OF ANALYSIS:') + '\n'
+    sorted_result = relative_measurement.get_sorted_result()
+    th = [_('Rating'), _('Alternative'), _('Priority')]
+    table = PrettyTable(th)
+    for i in range(len(sorted_result)):
+            table.add_row([i+1, sorted_result[i][1], round(sorted_result[i][2], 2)])
+    result_str += table.get_string()
+    return result_str
+
+
+def pcm_to_string(paired_comparison_matrix):
+    weights = paired_comparison_matrix.get_weights()
+    round_digits_num = 3
+    th = ['\\']
+    for i in range(1, paired_comparison_matrix.get_size() + 1):
+        th.append(paired_comparison_matrix.get_category(i))
+    th.append(_('Priority'))
+    table = PrettyTable(th)
+    for i in range(1, paired_comparison_matrix.get_size() + 1):
+        row = [paired_comparison_matrix.get_category(i)]
+        for j in range(1, paired_comparison_matrix.get_size() + 1):
+            row.append(round(paired_comparison_matrix.get_matrix_element(i, j), round_digits_num))
+        row.append(round(weights[i - 1], round_digits_num))
+        table.add_row(row)
+        bottom_str = ('\n' + _('Main eigenvalue = ') +
+                      str(round(paired_comparison_matrix.get_main_eigenvalue(), round_digits_num)) + '\n' +
+                      'C.R. = '
+                      + str(round(paired_comparison_matrix.get_consistency_ratio(), round_digits_num)) + '\n')
+    return table.get_string() + bottom_str
+
+
+def rm_to_string(relative_measurement):
+    round_digits_num = 3
+    round_result = relative_measurement.get_sorted_result()
+    for i in range(len(relative_measurement.get_alternatives())):
+        round_result[i][2] = round(round_result[i][2], round_digits_num)
+    result = ''
+    result += _('Factors compare matrix') + '\n'
+    result += relative_measurement.get_factors_compare_matrix().to_string() + '\n'
+    result += _('Alternatives compare matrixes') + '\n\n'
+    alternatives_compare_matrixes = relative_measurement.get_alternatives_compare_matrixes()
+    factors = relative_measurement.get_factors()
+    for i in range(len(factors)):
+        result += _('Comparing by factor: "') + factors[i] + '"\n'
+        result += alternatives_compare_matrixes[i].to_string() + '\n'
+    result += get_result_str(relative_measurement)
+    return result
+
+
 def __is_rerate():
-    return not (input_yes_no(_('There are some logical inconsistencies in your rates. Do you want to correct? (y/n) ')))
+    return not (input_yes_no(_('There are some logical inconsistencies in your rates. Do you want to rerate? (y/n) ')))
 
 
 def __is_normal_cr(cr):
@@ -192,16 +249,26 @@ def __input_rate(question):
 
 
 def __print_rate_instruction():
-    insruction = (_('Rating instruction:\n') +
-                  _('Rate\tDefenition\n') +
-                  _('0\t\tEqual preference\n') +
-                  _('1\t\tSmall preference\n') +
-                  _('2\t\tMedium Preference\n') +
-                  _('3\t\tAbove medium preference above medium\n') +
-                  _('4\t\tModerately strong preference\n') +
-                  _('5\t\tStrong preference\n') +
-                  _('6\t\tVery strong preference\n') +
-                  _('7\t\tVery, very strong preference\n') +
-                  _('8\t\tAbsolute preference\n') +
-                  _('Negative values [-8 -1] correspond to the inversion of the compared entities positions\n'))
-    print(insruction)
+    print()
+    print(_('RATING INSTRUCTION:'))
+    th = [_('Rate'), _('Definition'), _('Matrix coeff')]
+    table = PrettyTable(th)
+    table.add_row([8, _('Absolute advantage'), '9'])
+    table.add_row([7, _('Very, very strong advantage'), '8'])
+    table.add_row([6, _('Very strong advantage'), '7'])
+    table.add_row([5, _('Strong advantage'), '6'])
+    table.add_row([4, _('Moderately strong advantage'), '5'])
+    table.add_row([3, _('Above medium advantage'), '4'])
+    table.add_row([2, _('Medium advantage'), '3'])
+    table.add_row([1, _('Small advantage'), '2'])
+    table.add_row([0, _('Equal'), '1'])
+    table.add_row([-1, _('Small disadvantage'), '1/2'])
+    table.add_row([-2, _('Medium disadvantage'), '1/3'])
+    table.add_row([-3, _('Above medium disadvantage'), '1/4'])
+    table.add_row([-4, _('Moderately strong disadvantage'), '1/5'])
+    table.add_row([-5, _('Strong disadvantage'), '1/6'])
+    table.add_row([-6, _('Very strong disadvantage'), '1/7'])
+    table.add_row([-7, _('Very, very strong disadvantage'), '1/8'])
+    table.add_row([-8, _('Absolute disadvantage'), '1/9'])
+    print(table)
+    print()

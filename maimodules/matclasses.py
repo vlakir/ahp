@@ -1,5 +1,6 @@
 import numpy as np
 import maimodules.utils as ut
+import maimodules.dialogues as dl
 
 
 class PairedComparisonMatrix(object):
@@ -63,7 +64,7 @@ class PairedComparisonMatrix(object):
     def get_main_eigenvalue(self):
         return self.__main_eigenvalue
 
-    def main_eigenvector(self):
+    def get_main_eigenvector(self):
         return self.__main_eigenvector
 
     def get_weights(self):
@@ -109,22 +110,7 @@ class PairedComparisonMatrix(object):
         return ut.glue_result(self.__categories, self.get_weights(), True)
 
     def to_string(self):
-        round_digits_num = 2
-        round_result = self.get_sorted_result()
-        for i in range(self.__n):
-            round_result[i][2] = round(round_result[i][2], round_digits_num)
-        return ('Categories = ' + '\n' + str(self.get_categories()) + '\n' +
-                'Matrix = ' + '\n' + str(ut.round_matrix(self.__matrix, round_digits_num)) + '\n' +
-                'Main eigenvalue = ' + str(round(self.get_main_eigenvalue(), round_digits_num)) + '\n' +
-                'Main eigenvector = ' + '\n' +
-                str(ut.round_vector(self.__main_eigenvector, round_digits_num)) + '\n' +
-                'Weights = ' + '\n' + str(ut.round_vector(self.get_weights(), round_digits_num)) + '\n' +
-                'C.I. = ' + str(round(self.get_consistency_index(), round_digits_num)) + '\n' +
-                'C.R. = ' + str(round(self.get_consistency_ratio(), round_digits_num)) + '\n' +
-                'Sorted result = ' + '\n' + str(round_result))
-
-    # 2DO def load_from_csv
-    # 2DO def save_to_csv
+        return dl.pcm_to_string(self)
 
     def string_to_file(self, file_name):
         file = open(file_name, 'w')
@@ -283,28 +269,7 @@ class RelativeMeasurement(object):
         ut.list_to_csv(alternatives_compare_arrays_file_path, alternatives_compare_arrays)
 
     def to_string(self):
-        round_digits_num = 3
-
-        round_result = self.get_sorted_result()
-        for i in range(len(self.__alternatives)):
-            round_result[i][2] = round(round_result[i][2], round_digits_num)
-
-        result = '=============================================================================' + '\n'
-        result += '** Factors compare matrix **' + '\n'
-        result += self.__factors_compare_matrix.to_string() + '\n\n'
-        result += '=============================================================================' + '\n'
-        result += '** Alternatives compare matrixes **' + '\n\n'
-        for i in range(len(self.__factors)):
-            result += '-----------------------------------------------------------------------------' + '\n'
-            result += '* Comparing by factor ' + str(i + 1) + ': "' + self.__factors[i] + '"' + ' * \n'
-            result += self.__alternatives_compare_matrixes[i].to_string() + '\n\n'
-        result += '=============================================================================' + '\n'
-        result += '** Weigts **' + '\n'
-        result += str(ut.round_vector(self.__weights, round_digits_num)) + '\n\n'
-        result += '-----------------------------------------------------------------------------' + '\n'
-        result += 'Sorted result = ' + '\n' + str(round_result)
-
-        return result
+        return dl.rm_to_string(self)
 
     def string_to_file(self, file_name):
         file = open(file_name, 'w')

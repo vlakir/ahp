@@ -4,8 +4,6 @@ import maimodules.dialogues as dl
 
 dl.init_dialogues()
 
-# print(dl.input_yes_no('Are you ready (y/n): '))
-
 args = dl.parse_args()
 
 if args.interactive_input:
@@ -48,7 +46,7 @@ else:
 
 
 relative_measurement.calculate()
-print(relative_measurement.get_sorted_result())
+dl.show_result(relative_measurement)
 
 results_folder = './results/'
 
