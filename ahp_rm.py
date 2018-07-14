@@ -1,17 +1,12 @@
 import modules.matclasses as mc
 import modules.dialogues as dl
-
+import modules.file_io as fio
 
 dl.init_dialogues()
 
 args = dl.parse_args()
 
 if args.interactive_input:
-    relative_measurement, file_checker = (mc.RelativeMeasurement.load_from_csv
-                                          ('',
-                                           '',
-                                           '',
-                                           ''))
     dl.interactive_input_info()
     factors = dl.input_factors()
     alternatives = dl.input_alternatives()
@@ -21,7 +16,7 @@ if args.interactive_input:
     dl.input_alternatives_compares(relative_measurement)
 
 else:
-    relative_measurement, file_checker = (mc.RelativeMeasurement.load_from_csv
+    relative_measurement, file_checker = (fio.load_rm_from_csv
                                           (args.factors,
                                            args.alternatives,
                                            args.factors_compare_array,
@@ -50,10 +45,10 @@ dl.show_result(relative_measurement)
 
 results_folder = './results/'
 
-relative_measurement.save_to_csv(results_folder + args.factors,
-                                 results_folder + args.alternatives,
-                                 results_folder + args.factors_compare_array,
-                                 results_folder + args.alternatives_compare_arrays)
+fio.save_rm_to_csv(relative_measurement,
+                   results_folder + args.factors,
+                   results_folder + args.alternatives,
+                   results_folder + args.factors_compare_array,
+                   results_folder + args.alternatives_compare_arrays)
 
-relative_measurement.string_to_file(results_folder + args.result)
-
+fio.save_rm_string_to_file(relative_measurement, results_folder + args.result)

@@ -99,7 +99,7 @@ def input_factors_compare(relative_measurement):
                     relative_measurement.set_factors_compare_matrix_element(i, j, __input_rate(question))
         relative_measurement.calculate()
         cr = abs(relative_measurement.get_factors_compare_matrix().get_consistency_ratio())
-        if not __is_normal_cr(cr):
+        if not ut.is_normal_cr(cr):
             print('CR = %.2f' % cr)
             if __is_rerate():
                 break
@@ -123,11 +123,12 @@ def input_alternatives_compares(relative_measurement):
                     if (j - i) > 0:
                         question = _('Rate the alternative "%s" compared to the alternative "%s" [-8; 8] ') \
                                    % (alternatives[i - 1], alternatives[j - 1])
-                        relative_measurement.set_alternatives_compare_matrixes_element(k + 1, i, j, __input_rate(question))
+                        relative_measurement.set_alternatives_compare_matrixes_element(k + 1, i, j,
+                                                                                       __input_rate(question))
             alternatives_compare_matrix = relative_measurement.get_alternatives_compare_matrixes()[k]
             alternatives_compare_matrix.calculate()
             cr = abs(alternatives_compare_matrix.get_consistency_ratio())
-            if not __is_normal_cr(cr):
+            if not ut.is_normal_cr(cr):
                 print('CR = %.2f' % cr)
                 if __is_rerate():
                     break
@@ -159,7 +160,7 @@ def show_result(relative_measurement):
 
 
 def get_result_str(relative_measurement):
-    result_str =_('RESULTS OF ANALYSIS:') + '\n'
+    result_str = _('RESULTS OF ANALYSIS:') + '\n'
     sorted_result = relative_measurement.get_sorted_result()
     th = [_('Rating'), _('Alternative'), _('Priority')]
     table = PrettyTable(th)
@@ -177,16 +178,23 @@ def pcm_to_string(paired_comparison_matrix):
         th.append(paired_comparison_matrix.get_category(i))
     th.append(_('Priority'))
     table = PrettyTable(th)
+    bottom_str = ''
     for i in range(1, paired_comparison_matrix.get_size() + 1):
         row = [paired_comparison_matrix.get_category(i)]
         for j in range(1, paired_comparison_matrix.get_size() + 1):
             row.append(round(paired_comparison_matrix.get_matrix_element(i, j), round_digits_num))
         row.append(round(weights[i - 1], round_digits_num))
         table.add_row(row)
+        cr = paired_comparison_matrix.get_consistency_ratio()
         bottom_str = ('\n' + _('Main eigenvalue = ') +
                       str(round(paired_comparison_matrix.get_main_eigenvalue(), round_digits_num)) + '\n' +
                       'C.R. = '
-                      + str(round(paired_comparison_matrix.get_consistency_ratio(), round_digits_num)) + '\n')
+                      + str(round(cr, round_digits_num)) + '\n')
+
+        if not ut.is_normal_cr(cr):
+            bottom_str += _('WARNING! CR has an abnormal value. '
+                            'There are some logical inconsistencies in your rates.') + '\n'
+
     return table.get_string() + bottom_str
 
 
@@ -210,13 +218,6 @@ def rm_to_string(relative_measurement):
 
 def __is_rerate():
     return not (input_yes_no(_('There are some logical inconsistencies in your rates. Do you want to rerate? (y/n) ')))
-
-
-def __is_normal_cr(cr):
-    if cr <= 0.2:
-        return True
-    else:
-        return False
 
 
 def __input_list(len_question, enter_sentence):

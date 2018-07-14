@@ -55,3 +55,10 @@ def str_list_to_float(processing_list):
             else:  # x / y
                 processing_list[i][j] = float(split_list[0]) / float(split_list[1])
     return processing_list
+
+
+def is_normal_cr(cr):
+    if cr <= 0.2:
+        return True
+    else:
+        return False
