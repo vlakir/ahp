@@ -57,8 +57,4 @@ def str_list_to_float(processing_list):
     return processing_list
 
 
-def is_normal_cr(cr):
-    if cr <= 0.2:
-        return True
-    else:
-        return False
+

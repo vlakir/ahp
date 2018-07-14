@@ -103,6 +103,12 @@ class PairedComparisonMatrix(object):
             result = 1.59
         return result
 
+    def is_normal_cr(self):
+        if (self.get_consistency_ratio() <= 0.2) and (self.get_consistency_ratio() >= 0):
+            return True
+        else:
+            return False
+
     def get_unsorted_result(self):
         return ut.glue_result(self.__categories, self.get_weights(), False)
 
@@ -178,6 +184,12 @@ class RelativeMeasurement(object):
 
     def get_sorted_result(self):
         return ut.glue_result(self.__alternatives, self.__weights, True)
+
+    def is_normal_cr(self):
+        result = self.get_factors_compare_matrix().is_normal_cr()
+        for i in range(self.get_alternatives_count()):
+            result = (result and self.get_alternatives_compare_matrixes()[i].is_normal_cr())
+        return result
 
     def to_string(self):
         return dl.rm_to_string(self)

@@ -1,7 +1,6 @@
 import argparse
 import gettext
 from prettytable import PrettyTable
-import modules.utils as ut
 
 
 def init_dialogues():
@@ -98,9 +97,8 @@ def input_factors_compare(relative_measurement):
                                % (factors[i - 1], factors[j - 1])
                     relative_measurement.set_factors_compare_matrix_element(i, j, __input_rate(question))
         relative_measurement.calculate()
-        cr = abs(relative_measurement.get_factors_compare_matrix().get_consistency_ratio())
-        if not ut.is_normal_cr(cr):
-            print('CR = %.2f' % cr)
+        if not relative_measurement.get_factors_compare_matrix().is_normal_cr():
+            print('CR = %.2f' % relative_measurement.get_factors_compare_matrix().get_consistency_ratio())
             if __is_rerate():
                 break
         else:
@@ -127,9 +125,8 @@ def input_alternatives_compares(relative_measurement):
                                                                                        __input_rate(question))
             alternatives_compare_matrix = relative_measurement.get_alternatives_compare_matrixes()[k]
             alternatives_compare_matrix.calculate()
-            cr = abs(alternatives_compare_matrix.get_consistency_ratio())
-            if not ut.is_normal_cr(cr):
-                print('CR = %.2f' % cr)
+            if not alternatives_compare_matrix.is_normal_cr():
+                print('CR = %.2f' % alternatives_compare_matrix.get_consistency_ratio())
                 if __is_rerate():
                     break
             else:
@@ -155,7 +152,7 @@ def input_yes_no(question):
 def show_result(relative_measurement):
     print()
     print(get_result_str(relative_measurement))
-    print(_('See details in results.txt'))
+    print(_('See results.txt for more details'))
     print()
 
 
@@ -167,6 +164,8 @@ def get_result_str(relative_measurement):
     for i in range(len(sorted_result)):
             table.add_row([i+1, sorted_result[i][1], round(sorted_result[i][2], 2)])
     result_str += table.get_string()
+    if not relative_measurement.is_normal_cr():
+        result_str += '\n' + __rm_warning()
     return result_str
 
 
@@ -185,16 +184,13 @@ def pcm_to_string(paired_comparison_matrix):
             row.append(round(paired_comparison_matrix.get_matrix_element(i, j), round_digits_num))
         row.append(round(weights[i - 1], round_digits_num))
         table.add_row(row)
-        cr = paired_comparison_matrix.get_consistency_ratio()
         bottom_str = ('\n' + _('Main eigenvalue = ') +
                       str(round(paired_comparison_matrix.get_main_eigenvalue(), round_digits_num)) + '\n' +
                       'C.R. = '
-                      + str(round(cr, round_digits_num)) + '\n')
+                      + str(round(paired_comparison_matrix.get_consistency_ratio(), round_digits_num)) + '\n')
 
-        if not ut.is_normal_cr(cr):
-            bottom_str += _('WARNING! CR has an abnormal value. '
-                            'There are some logical inconsistencies in your rates.') + '\n'
-
+        if not paired_comparison_matrix.is_normal_cr():
+            bottom_str += __rm_warning()
     return table.get_string() + bottom_str
 
 
@@ -216,8 +212,12 @@ def rm_to_string(relative_measurement):
     return result
 
 
+def __rm_warning():
+    return _('WARNING! CR has an abnormal value.') + '\n' + _('There are some logical inconsistencies in your rates.')
+
+
 def __is_rerate():
-    return not (input_yes_no(_('There are some logical inconsistencies in your rates. Do you want to rerate? (y/n) ')))
+    return not (input_yes_no(__rm_warning() + '\n' + _('Do you want to rerate? (y/n)') + ' '))
 
 
 def __input_list(len_question, enter_sentence):
