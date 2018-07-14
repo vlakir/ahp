@@ -1,7 +1,7 @@
 import argparse
 import gettext
 from prettytable import PrettyTable
-import maimodules.utils as ut
+import modules.utils as ut
 
 
 def init_dialogues():

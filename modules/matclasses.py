@@ -1,6 +1,6 @@
 import numpy as np
-import maimodules.utils as ut
-import maimodules.dialogues as dl
+import modules.utils as ut
+import modules.dialogues as dl
 
 
 class PairedComparisonMatrix(object):

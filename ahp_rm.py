@@ -1,5 +1,5 @@
-import maimodules.matclasses as mc
-import maimodules.dialogues as dl
+import modules.matclasses as mc
+import modules.dialogues as dl
 
 
 dl.init_dialogues()
