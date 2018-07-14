@@ -4,7 +4,11 @@ from prettytable import PrettyTable
 
 
 def init_dialogues():
-    gettext.install('ahp_rm', './locale')
+    ru = gettext.translation('messages', './locale', languages=['ru'])
+    ru.install()
+
+    # gettext.install('messages', './locale')
+
 
 
 def parse_args():
@@ -213,11 +217,12 @@ def rm_to_string(relative_measurement):
 
 
 def __rm_warning():
-    return _('WARNING! CR has an abnormal value.') + '\n' + _('There are some logical inconsistencies in your rates.')
+    return _('WARNING! CR has an abnormal value.') + '\n' + \
+           _('There are some logical inconsistencies in your rates.') + '\n'
 
 
 def __is_rerate():
-    return not (input_yes_no(__rm_warning() + '\n' + _('Do you want to rerate? (y/n)') + ' '))
+    return not (input_yes_no(__rm_warning() + _('Do you want to rerate? (y/n)') + ' '))
 
 
 def __input_list(len_question, enter_sentence):
