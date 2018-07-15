@@ -115,8 +115,8 @@ def input_yes_no(question):
     while 1:
         try:
             input_str = input(question).upper()
-            local_lang_yes_upper = _('Д')
-            local_lang_no_upper = _('Н')
+            local_lang_yes_upper = _('Y')
+            local_lang_no_upper = _('N')
             if input_str not in ('Y', 'N', local_lang_yes_upper, local_lang_no_upper):
                 raise ValueError()
             if (input_str == 'Y') or (input_str == local_lang_yes_upper):
