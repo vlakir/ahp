@@ -1,5 +1,34 @@
 import modules.utils as ut
 import modules.matclasses as mc
+import argparse
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description='''Realisation of AHP relative method by T.Saaty''',
+        epilog='''(c) vlakir 2018''')
+    parser.add_argument('-f', '--factors', default='factors.csv',
+                        help='Path to .csv file with list of factors',
+                        metavar='PATH')
+    parser.add_argument('-a', '--alternatives', default='alternatives.csv',
+                        help='Path to .csv file with list of alternatives',
+                        metavar='PATH')
+    parser.add_argument('-fc', '--factors-compare-array', default='factors_compare.csv',
+                        help='Path to .csv file with factors compare array',
+                        metavar='PATH')
+    parser.add_argument('-ac', '--alternatives-compare-arrays', default='alternatives_compares.csv',
+                        help='Path to .csv file with alternatives compare arrays',
+                        metavar='PATH')
+    parser.add_argument('-r', '--result', default='result.txt',
+                        help='Path to .txt file with full solution expaination',
+                        metavar='PATH')
+    parser.add_argument('-i', '--interactive-input', action='store_const', const=True,
+                        help='Ignore filepaths. All values will be asked interactively')
+    parser.add_argument('-l', '--language', default='en',
+                        help='Language of user intreface: en, ru etc',
+                        metavar='LANGUAGE')
+    namespace = parser.parse_args()
+    return namespace
 
 
 def load_rm_from_csv(factor_file_path, alternatives_file_path,

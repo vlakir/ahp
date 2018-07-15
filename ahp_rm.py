@@ -2,19 +2,18 @@ import modules.matclasses as mc
 import modules.dialogues as dl
 import modules.file_io as fio
 
-dl.init_dialogues()
 
-args = dl.parse_args()
+args = fio.parse_args()
+
+dl.set_language(args.language)
 
 if args.interactive_input:
     dl.interactive_input_info()
     factors = dl.input_factors()
     alternatives = dl.input_alternatives()
     relative_measurement = mc.RelativeMeasurement(alternatives, factors)
-
     dl.input_factors_compare(relative_measurement)
     dl.input_alternatives_compares(relative_measurement)
-
 else:
     relative_measurement, file_checker = (fio.load_rm_from_csv
                                           (args.factors,
@@ -38,7 +37,6 @@ else:
         dl.alternatives_compares_file_info(file_checker)
         if not file_checker.is_alternatives_compares_file_correct:
             dl.input_alternatives_compares(relative_measurement)
-
 
 relative_measurement.calculate()
 dl.show_result(relative_measurement)

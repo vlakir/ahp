@@ -1,41 +1,15 @@
-import argparse
 import gettext
 from prettytable import PrettyTable
 
 
-def init_dialogues():
-    ru = gettext.translation('messages', './locale', languages=['ru'])
-    ru.install()
-
-    # gettext.install('messages', './locale')
-
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(
-        description='''Realisation of AHP relative method by T.Saaty''',
-        epilog='''(c) vlakir 2018''')
-    parser.add_argument('-f', '--factors', default='factors.csv',
-                        help='Path to .csv file with list of factors',
-                        metavar='PATH')
-    parser.add_argument('-a', '--alternatives', default='alternatives.csv',
-                        help='Path to .csv file with list of alternatives',
-                        metavar='PATH')
-    parser.add_argument('-fc', '--factors-compare-array', default='factors_compare.csv',
-                        help='Path to .csv file with factors compare array',
-                        metavar='PATH')
-    parser.add_argument('-ac', '--alternatives-compare-arrays', default='alternatives_compares.csv',
-                        help='Path to .csv file with alternatives compare arrays',
-                        metavar='PATH')
-    parser.add_argument('-r', '--result', default='result.txt',
-                        help='Path to .txt file with full solution expaination',
-                        metavar='PATH')
-    parser.add_argument('-i', '--interactive-input', action='store_const', const=True,
-                        help='Ignore filepaths. All values will be asked interactively',
-                        metavar='PATH')
-
-    namespace = parser.parse_args()
-    return namespace
+def set_language(language):
+    try:
+        lang = gettext.translation('messages', './locale', languages=[language])
+        lang.install()
+    except FileNotFoundError:
+        print('File messages.mo is not found for language "' + language + '". Use default language settings.')
+        lang = gettext.translation('messages', './locale', languages=['en'])
+        lang.install()
 
 
 def factors_file_info(file_checker):
@@ -80,12 +54,12 @@ def interactive_input_info():
 
 def input_factors():
     print(_("Enter factors."))
-    return __input_list(_("How many factors do you want to use? "), _("Enter name of factor №"))
+    return __input_list(_("How many factors do you want to use?") + " ", _("Enter name of factor №"))
 
 
 def input_alternatives():
     print(_("Enter alternatives."))
-    return __input_list(_("How many alternatives do you want to use? "), _("Enter name of alternative №"))
+    return __input_list(_("How many alternatives do you want to use?") + " ", _("Enter name of alternative №"))
 
 
 def input_factors_compare(relative_measurement):
