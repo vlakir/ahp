@@ -193,3 +193,7 @@ class RelativeMeasurement(object):
 
     def to_string(self):
         return dl.rm_to_string(self)
+
+
+if __name__ == '__main__':
+    print('This module is intended only for import, not for execution!')

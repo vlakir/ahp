@@ -55,3 +55,7 @@ def str_list_to_float(processing_list):
             else:  # x / y
                 processing_list[i][j] = float(split_list[0]) / float(split_list[1])
     return processing_list
+
+
+if __name__ == '__main__':
+    print('This module is intended only for import, not for execution!')

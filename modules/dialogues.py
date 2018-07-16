@@ -3,6 +3,12 @@ from prettytable import PrettyTable
 
 
 def set_language(language):
+    """
+    Set the language of the user interface using gettext module
+
+    @param language: The language string as part of the path to messages.mo: 'en', 'ru', etc
+    @type language: string
+    """
     try:
         lang = gettext.translation('messages', './locale', languages=[language])
         lang.install()
@@ -13,15 +19,27 @@ def set_language(language):
 
 
 def factors_file_info(file_checker):
+    """
+    Print results of factors csv-file checkings: found/not found, correct/incorrect
+
+    @param file_checker: The object with parameters of the imported csv-file
+    @type file_checker: modules.file_io.FileChecker
+    """
     if not file_checker.is_factor_file_found:
-        print(_("Factors file is not found."))
+        print(_("Factors file is not found"))
     elif not file_checker.is_factor_file_correct:
-        print(_("Factors file is not correct."))
+        print(_("Factors file has incorrect format"))
     else:
         print(_("Factors file is loaded and checked"))
 
 
 def alternatives_file_info(file_checker):
+    """
+    Print results of alternatives csv-file checkings: found/not found, correct/incorrect
+
+    @param file_checker: The object with parameters of the imported csv-file
+    @type file_checker: modules.file_io.FileChecker
+    """
     if not file_checker.is_alternatives_file_found:
         print(_("Alternatives file is not found"))
     elif not file_checker.is_alternatives_file_correct:
@@ -31,6 +49,12 @@ def alternatives_file_info(file_checker):
 
 
 def factors_compare_file_info(file_checker):
+    """
+    Print results of factors compare csv-file checkings: found/not found, correct/incorrect
+
+    @param file_checker: The object with parameters of the imported csv-file
+    @type file_checker: modules.file_io.FileChecker
+    """
     if not file_checker.is_factors_compare_file_found:
         print(_("Factors compare file is not found"))
     elif not file_checker.is_factors_compare_file_correct:
@@ -40,6 +64,12 @@ def factors_compare_file_info(file_checker):
 
 
 def alternatives_compares_file_info(file_checker):
+    """
+    Print results of alternatives compares csv-file checkings: found/not found, correct/incorrect
+
+    @param file_checker: The object with parameters of the imported csv-file
+    @type file_checker: modules.file_io.FileChecker
+    """
     if not file_checker.is_alternatives_compares_file_found:
         print(_("Alternatives compares file is not found"))
     elif not file_checker.is_alternatives_compares_file_correct:
@@ -264,3 +294,7 @@ def __print_rate_instruction():
     table.add_row([_('Absolute disadvantage'), '1/9'])
     print(table)
     print()
+
+
+if __name__ == '__main__':
+    print('This module is intended only for import, not for execution!')

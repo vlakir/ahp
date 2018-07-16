@@ -135,3 +135,7 @@ class FileChecker(object):
         self.is_factors_compare_file_correct = False
         self.is_alternatives_compares_file_found = False
         self.is_alternatives_compares_file_correct = False
+
+
+if __name__ == '__main__':
+    print('This module is intended only for import, not for execution!')
