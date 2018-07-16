@@ -71,7 +71,7 @@ def input_factors_compare(relative_measurement):
         for i in range(1, relative_measurement.get_factors_count() + 1):
             for j in range(1, relative_measurement.get_factors_count() + 1):
                 if (j - i) > 0:
-                    question = _('Rate the importance of factor "%s" compared to factor "%s" [-8; 8] ') \
+                    question = (_('Rate the importance of factor "%s" compared to factor "%s"') + ': ') \
                                % (factors[i - 1], factors[j - 1])
                     relative_measurement.set_factors_compare_matrix_element(i, j, __input_rate(question))
         relative_measurement.calculate()
@@ -97,7 +97,7 @@ def input_alternatives_compares(relative_measurement):
             for i in range(1, relative_measurement.get_alternatives_count() + 1):
                 for j in range(1, relative_measurement.get_alternatives_count() + 1):
                     if (j - i) > 0:
-                        question = _('Rate the alternative "%s" compared to the alternative "%s" [-8; 8] ') \
+                        question = (_('Rate the alternative "%s" compared to the alternative "%s"') + ': ') \
                                    % (alternatives[i - 1], alternatives[j - 1])
                         relative_measurement.set_alternatives_compare_matrixes_element(k + 1, i, j,
                                                                                        __input_rate(question))
@@ -215,40 +215,52 @@ def __input_list(len_question, enter_sentence):
 
 def __input_rate(question):
     while 1:
+        num_str = input(question)
         try:
-            num = int(input(question))
-            if num not in (-8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8):
-                raise ValueError()
-            if num >= 0:
-                num += 1
+            num = int(num_str)
+            if num in (1, 2, 3, 4, 5, 6, 7, 8, 9):
+                return num
             else:
-                num = 1 / (abs(num) + 1)
-            return num
+                raise ValueError()
         except ValueError:
-            print(_('You must enter only integer number from -8 to 8! Try again. \n'))
+            num_list = num_str.split('/')
+            try:
+                if len(num_list) != 2:
+                    raise ValueError()
+                else:
+                    numerator = int(num_list[0])
+                    denominator = int(num_list[1])
+                    if (numerator != 1) or (denominator < 2) or (denominator > 9):
+                        raise ValueError()
+                    else:
+                        num = numerator / denominator
+                        return num
+            except ValueError:
+                print(_('You must enter integer number from 1 to 9 or simple fraction from 1/9 to 1/2') + '\n' +
+                      _('Try again.') + '\n')
 
 
 def __print_rate_instruction():
     print()
     print(_('RATING INSTRUCTION:'))
-    th = [_('Rate'), _('Definition'), _('Matrix coeff')]
+    th = [_('Definition'), _('Rate')]
     table = PrettyTable(th)
-    table.add_row([8, _('Absolute advantage'), '9'])
-    table.add_row([7, _('Very, very strong advantage'), '8'])
-    table.add_row([6, _('Very strong advantage'), '7'])
-    table.add_row([5, _('Strong advantage'), '6'])
-    table.add_row([4, _('Moderately strong advantage'), '5'])
-    table.add_row([3, _('Above medium advantage'), '4'])
-    table.add_row([2, _('Medium advantage'), '3'])
-    table.add_row([1, _('Small advantage'), '2'])
-    table.add_row([0, _('Equal'), '1'])
-    table.add_row([-1, _('Small disadvantage'), '1/2'])
-    table.add_row([-2, _('Medium disadvantage'), '1/3'])
-    table.add_row([-3, _('Above medium disadvantage'), '1/4'])
-    table.add_row([-4, _('Moderately strong disadvantage'), '1/5'])
-    table.add_row([-5, _('Strong disadvantage'), '1/6'])
-    table.add_row([-6, _('Very strong disadvantage'), '1/7'])
-    table.add_row([-7, _('Very, very strong disadvantage'), '1/8'])
-    table.add_row([-8, _('Absolute disadvantage'), '1/9'])
+    table.add_row([_('Absolute advantage'), '9'])
+    table.add_row([_('Very, very strong advantage'), '8'])
+    table.add_row([_('Very strong advantage'), '7'])
+    table.add_row([_('Strong advantage'), '6'])
+    table.add_row([_('Moderately strong advantage'), '5'])
+    table.add_row([_('Above medium advantage'), '4'])
+    table.add_row([_('Medium advantage'), '3'])
+    table.add_row([_('Small advantage'), '2'])
+    table.add_row([_('Equal'), '1'])
+    table.add_row([_('Small disadvantage'), '1/2'])
+    table.add_row([_('Medium disadvantage'), '1/3'])
+    table.add_row([_('Above medium disadvantage'), '1/4'])
+    table.add_row([_('Moderately strong disadvantage'), '1/5'])
+    table.add_row([_('Strong disadvantage'), '1/6'])
+    table.add_row([_('Very strong disadvantage'), '1/7'])
+    table.add_row([_('Very, very strong disadvantage'), '1/8'])
+    table.add_row([_('Absolute disadvantage'), '1/9'])
     print(table)
     print()
