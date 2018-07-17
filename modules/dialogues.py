@@ -1,6 +1,7 @@
 import gettext
 from prettytable import PrettyTable
 import modules.utils as ut
+import modules.file_io as fio
 
 
 def set_language(language):
@@ -222,7 +223,7 @@ def get_result_str(relative_measurement):
 
 def pcm_to_string(paired_comparison_matrix):
     weights = paired_comparison_matrix.get_weights()
-    round_digits_num = 3
+    round_digits_num = int(fio.get_config_setting('round_digits_num'))
     th = ['\\']
     for i in range(1, paired_comparison_matrix.get_size() + 1):
         th.append(paired_comparison_matrix.get_category(i))
@@ -247,7 +248,7 @@ def pcm_to_string(paired_comparison_matrix):
 
 
 def rm_to_string(relative_measurement):
-    round_digits_num = 3
+    round_digits_num = int(fio.get_config_setting('round_digits_num'))
     round_result = relative_measurement.get_sorted_result()
     for i in range(len(relative_measurement.get_alternatives())):
         round_result[i][2] = round(round_result[i][2], round_digits_num)

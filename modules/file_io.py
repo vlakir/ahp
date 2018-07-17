@@ -1,6 +1,7 @@
 import modules.utils as ut
 import modules.matclasses as mc
 import argparse
+import configparser
 
 
 def parse_args():
@@ -123,6 +124,21 @@ def save_rm_to_csv(relative_measurement, factor_file_path, alternatives_file_pat
 def save_rm_string_to_file(relative_measurement, file_name):
     file = open(file_name, 'w')
     file.write(relative_measurement.to_string())
+
+
+def create_config():
+    config = configparser.ConfigParser()
+    config.add_section('Settings')
+    config.set('Settings', 'results_folder', './results/')
+    config.set('Settings', 'round_digits_num', '3')
+    with open('settings.ini', 'w') as config_file:
+        config.write(config_file)
+
+
+def get_config_setting(setting_name):
+    config = configparser.ConfigParser()
+    config.read('settings.ini')
+    return config.get("Settings", setting_name)
 
 
 class FileChecker(object):

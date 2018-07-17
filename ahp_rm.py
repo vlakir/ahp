@@ -4,6 +4,7 @@ import modules.file_io as fio
 
 
 def main():
+    # fio.create_config()
     args = fio.parse_args()
     dl.set_language(args.language)
     if args.interactive_input:
@@ -31,13 +32,12 @@ def main():
             dl.factors_compare_file_info(file_checker)
             if not file_checker.is_factors_compare_file_correct:
                 dl.input_factors_compare(relative_measurement)
-
             dl.alternatives_compares_file_info(file_checker)
             if not file_checker.is_alternatives_compares_file_correct:
                 dl.input_alternatives_compares(relative_measurement)
     relative_measurement.calculate()
     dl.show_result(relative_measurement)
-    results_folder = './results/'
+    results_folder = fio.get_config_setting('results_folder')
     fio.save_rm_to_csv(relative_measurement,
                        results_folder + args.factors,
                        results_folder + args.alternatives,
