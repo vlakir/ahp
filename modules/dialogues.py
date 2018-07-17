@@ -1,5 +1,6 @@
 import gettext
 from prettytable import PrettyTable
+import modules.utils as ut
 
 
 def set_language(language):
@@ -189,7 +190,8 @@ def pcm_to_string(paired_comparison_matrix):
     for i in range(1, paired_comparison_matrix.get_size() + 1):
         row = [paired_comparison_matrix.get_category(i)]
         for j in range(1, paired_comparison_matrix.get_size() + 1):
-            row.append(round(paired_comparison_matrix.get_matrix_element(i, j), round_digits_num))
+            # row.append(round(paired_comparison_matrix.get_matrix_element(i, j), round_digits_num))
+            row.append(ut.get_fraction(paired_comparison_matrix.get_matrix_element(i, j), round_digits_num))
         row.append(round(weights[i - 1], round_digits_num))
         table.add_row(row)
         bottom_str = ('\n' + _('Main eigenvalue = ') +
