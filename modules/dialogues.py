@@ -7,7 +7,7 @@ def set_language(language):
     """
     Set the language of the user interface using gettext module
 
-    @param language: The language string as part of the path to messages.mo: 'en', 'ru', etc
+    @param language: Language string as part of the path to messages.mo: 'en', 'ru', etc
     @type language: string
     """
     try:
@@ -23,7 +23,7 @@ def factors_file_info(file_checker):
     """
     Print results of factors csv-file checkings: found/not found, correct/incorrect
 
-    @param file_checker: The object with parameters of the imported csv-file
+    @param file_checker: Object with parameters of the imported csv-file
     @type file_checker: modules.file_io.FileChecker
     """
     if not file_checker.is_factor_file_found:
@@ -38,7 +38,7 @@ def alternatives_file_info(file_checker):
     """
     Print results of alternatives csv-file checkings: found/not found, correct/incorrect
 
-    @param file_checker: The object with parameters of the imported csv-file
+    @param file_checker: Object with parameters of the imported csv-file
     @type file_checker: modules.file_io.FileChecker
     """
     if not file_checker.is_alternatives_file_found:
@@ -53,7 +53,7 @@ def factors_compare_file_info(file_checker):
     """
     Print results of factors compare csv-file checkings: found/not found, correct/incorrect
 
-    @param file_checker: The object with parameters of the imported csv-file
+    @param file_checker: Object with parameters of the imported csv-file
     @type file_checker: modules.file_io.FileChecker
     """
     if not file_checker.is_factors_compare_file_found:
@@ -68,7 +68,7 @@ def alternatives_compares_file_info(file_checker):
     """
     Print results of alternatives compares csv-file checkings: found/not found, correct/incorrect
 
-    @param file_checker: The object with parameters of the imported csv-file
+    @param file_checker: Object with parameters of the imported csv-file
     @type file_checker: modules.file_io.FileChecker
     """
     if not file_checker.is_alternatives_compares_file_found:
@@ -80,20 +80,38 @@ def alternatives_compares_file_info(file_checker):
 
 
 def interactive_input_info():
+    """
+    Print message about interactive mode of input
+    """
     print(_("Interactive mode. You have to enter all values manually."))
 
 
 def input_factors():
+    """
+    Interactive input of factors names
+    @return: List of factors names
+    @rtype: list
+    """
     print(_("Enter factors."))
     return __input_list(_("How many factors do you want to use?") + " ", _("Enter name of factor №"))
 
 
 def input_alternatives():
+    """
+    Interactive input of alternatives names
+    @return: List of alternatives names
+    @rtype: list
+    """
     print(_("Enter alternatives."))
     return __input_list(_("How many alternatives do you want to use?") + " ", _("Enter name of alternative №"))
 
 
 def input_factors_compare(relative_measurement):
+    """
+    Record factor rating into object
+    @param relative_measurement: Object the factor rating will be recorded into which
+    @type relative_measurement: modules.matclasses.RelativeMeasurement
+    """
     print()
     print(_("Enter factors compare matrix."))
     __print_rate_instruction()
@@ -115,6 +133,11 @@ def input_factors_compare(relative_measurement):
 
 
 def input_alternatives_compares(relative_measurement):
+    """
+    Record alternatives ratings into object
+    @param relative_measurement: Object the alternatives ratings will be recorded into which
+    @type relative_measurement: modules.matclasses.RelativeMeasurement
+    """
     print()
     print(_("Enter alternatives compare matrixes."))
     __print_rate_instruction()
@@ -143,6 +166,13 @@ def input_alternatives_compares(relative_measurement):
 
 
 def input_yes_no(question):
+    """
+    Ask user and input answer 'y' or 'n'
+    @param question: Question the user should answer to which
+    @type question: string
+    @return: True if the answer is 'y'. False if the answer is 'n'
+    @rtype: bool
+    """
     while 1:
         try:
             input_str = input(question).upper()
@@ -159,6 +189,11 @@ def input_yes_no(question):
 
 
 def show_result(relative_measurement):
+    """
+    Print final results of the measurement
+    @param relative_measurement: Object the results will be printed from
+    @type relative_measurement: modules.matclasses.RelativeMeasurement
+    """
     print()
     print(get_result_str(relative_measurement))
     print(_('See results.txt for more details'))
@@ -166,6 +201,13 @@ def show_result(relative_measurement):
 
 
 def get_result_str(relative_measurement):
+    """
+    Get final results of the measurement
+    @param relative_measurement: Object the results will be got from
+    @type relative_measurement: modules.matclasses.RelativeMeasurement
+    @return: Formated table with results
+    @rtype: string
+    """
     result_str = _('RESULTS OF ANALYSIS:') + '\n'
     sorted_result = relative_measurement.get_sorted_result()
     th = [_('Rating'), _('Alternative'), _('Priority')]
