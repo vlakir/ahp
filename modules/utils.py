@@ -2,14 +2,30 @@ import csv
 import os
 
 
-def ensure_dir(file_path):
-    directory = os.path.dirname(file_path)
+def ensure_dir(path):
+    """
+    Create the folder if it's not exist
+    @param path: Path including folder name
+    @type path: string
+    """
+    directory = os.path.dirname(path)
     if not directory == '':
         if not os.path.exists(directory):
             os.makedirs(directory)
 
 
 def glue_result(categories, weights, is_sort):
+    """
+    Assemble numbered list of categories with the corresponding list of weights
+    @param categories: List of categories
+    @type categories: list
+    @param weights: List of weights
+    @type weights: list
+    @param is_sort: To sort members of result list by weights values
+    @type is_sort: bool
+    @return: Assembled list
+    @rtype: list
+    """
     result = []
     for i in range(len(categories)):
         result.append([i + 1, categories[i], weights[i]])
@@ -19,6 +35,15 @@ def glue_result(categories, weights, is_sort):
 
 
 def round_vector(vector, digits_num):
+    """
+    Round values of the column
+    @param vector: Column
+    @type vector: list
+    @param digits_num: number of decimal places
+    @type digits_num: int
+    @return:
+    @rtype:
+    """
     return [round(v, digits_num) for v in vector]
 
 

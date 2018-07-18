@@ -370,7 +370,7 @@ def __print_rate_instruction():
     table.add_row([_('Above medium advantage'), '4'])
     table.add_row([_('Medium advantage'), '3'])
     table.add_row([_('Small advantage'), '2'])
-    table.add_row([_('Equal'), '1'])
+    table.add_row([_('Equivalence'), '1'])
     table.add_row([_('Small disadvantage'), '1/2'])
     table.add_row([_('Medium disadvantage'), '1/3'])
     table.add_row([_('Above medium disadvantage'), '1/4'])
