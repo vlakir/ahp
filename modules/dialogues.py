@@ -222,6 +222,13 @@ def get_result_str(relative_measurement):
 
 
 def pcm_to_string(paired_comparison_matrix):
+    """
+    String representation of PairedComparisonMatrix object
+    @param paired_comparison_matrix: Object
+    @type paired_comparison_matrix: modules.matclasses.PairedComparisonMatrix
+    @return: String representation of the object
+    @rtype: string
+    """
     weights = paired_comparison_matrix.get_weights()
     round_digits_num = int(fio.get_config_setting('round_digits_num'))
     th = ['\\']
@@ -248,6 +255,13 @@ def pcm_to_string(paired_comparison_matrix):
 
 
 def rm_to_string(relative_measurement):
+    """
+    String representation of the RelativeMeasurement object
+    @param relative_measurement: Object
+    @type relative_measurement: modules.matclasses.RelativeMeasurement
+    @return: String representation of the object
+    @rtype: string
+    """
     round_digits_num = int(fio.get_config_setting('round_digits_num'))
     round_result = relative_measurement.get_sorted_result()
     for i in range(len(relative_measurement.get_alternatives())):
@@ -266,15 +280,34 @@ def rm_to_string(relative_measurement):
 
 
 def __rm_warning():
-    return _('WARNING! CR has an abnormal value.') + '\n' + \
-           _('There are some logical inconsistencies in your rates.') + '\n'
+    """
+    Warning about abnormal value of CR coefficient
+    @return: Warning message
+    @rtype: string
+    """
+    return (_('WARNING! CR has an abnormal value.') + '\n' +
+            _('There are some logical inconsistencies in your rates.') + '\n')
 
 
 def __is_rerate():
+    """
+    Ask user does he want to input rating agayn
+    @return: True if user wants to rate agayn, False if he doesn't
+    @rtype: bool
+    """
     return not (input_yes_no(__rm_warning() + _('Do you want to rerate? (y/n)') + ' '))
 
 
 def __input_list(len_question, enter_sentence):
+    """
+    Input list of factors or alternatives
+    @param len_question: Question about quantity of members
+    @type len_question: string
+    @param enter_sentence: Suggestion to enter a next value
+    @type enter_sentence: string
+    @return: Factors or alternatives
+    @rtype: list
+    """
     while 1:
         try:
             num = int(input(len_question))
@@ -285,12 +318,19 @@ def __input_list(len_question, enter_sentence):
                 result.append(input(enter_sentence + str(i + 1) + ": "))
             return result
         except ValueError:
-            print(_('You must enter only positive integer number! Try again. \n'))
+            print(_('You must enter only positive integer number! Try again.') + '\n')
 
 
-def __input_rate(question):
+def __input_rate(enter_sentence):
+    """
+    Input value of the rate
+    @param enter_sentence: Suggestion to enter a value
+    @type enter_sentence: string
+    @return: Value of the rate
+    @rtype: float
+    """
     while 1:
-        num_str = input(question)
+        num_str = input(enter_sentence)
         try:
             num = int(num_str)
             if num in (1, 2, 3, 4, 5, 6, 7, 8, 9):
@@ -316,8 +356,10 @@ def __input_rate(question):
 
 
 def __print_rate_instruction():
-    print()
-    print(_('RATING INSTRUCTION:'))
+    """
+    Print instruction about values of rates
+    """
+    print('\n' + _('RATING INSTRUCTION:'))
     th = [_('Definition'), _('Rate')]
     table = PrettyTable(th)
     table.add_row([_('Absolute advantage'), '9'])
@@ -337,8 +379,7 @@ def __print_rate_instruction():
     table.add_row([_('Very strong disadvantage'), '1/7'])
     table.add_row([_('Very, very strong disadvantage'), '1/8'])
     table.add_row([_('Absolute disadvantage'), '1/9'])
-    print(table)
-    print()
+    print(table + '\n')
 
 
 if __name__ == '__main__':
