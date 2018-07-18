@@ -130,6 +130,7 @@ def create_config():
     config = configparser.ConfigParser()
     config.add_section('Settings')
     config.set('Settings', 'results_folder', './results/')
+    config.set('Settings', 'locale_folder', './locale/')
     config.set('Settings', 'round_digits_num', '3')
     with open('settings.ini', 'w') as config_file:
         config.write(config_file)

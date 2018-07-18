@@ -12,7 +12,7 @@ def set_language(language):
     @type language: string
     """
     try:
-        lang = gettext.translation('messages', './locale', languages=[language])
+        lang = gettext.translation('messages', fio.get_config_setting('locale_folder'), languages=[language])
         lang.install()
     except FileNotFoundError:
         print('File messages.mo is not found for language "' + language + '". Use default language settings.')
