@@ -16,7 +16,7 @@ def set_language(language):
         lang.install()
     except FileNotFoundError:
         print('File messages.mo is not found for language "' + language + '". Use default language settings.')
-        lang = gettext.translation('messages', './locale', languages=['en'])
+        lang = gettext.translation('messages', fio.get_config_setting('locale_folder'), languages=['en'])
         lang.install()
 
 
@@ -273,7 +273,7 @@ def rm_to_string(relative_measurement):
     alternatives_compare_matrixes = relative_measurement.get_alternatives_compare_matrixes()
     factors = relative_measurement.get_factors()
     for i in range(len(factors)):
-        result += _('Comparing by factor: "') + factors[i] + '"\n'
+        result += _('Comparing by factor:') + ' "' + factors[i] + '"\n'
         result += alternatives_compare_matrixes[i].to_string() + '\n'
     result += get_result_str(relative_measurement)
     return result
