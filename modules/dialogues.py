@@ -94,7 +94,7 @@ def input_factors():
     @rtype: list
     """
     print(_("Enter factors."))
-    return __input_list(_("How many factors do you want to use?") + " ", _("Enter name of factor "))
+    return __input_list(_("How many factors do you want to use?") + " ", _("Enter name of factor") + ' ')
 
 
 def input_alternatives():
@@ -104,7 +104,7 @@ def input_alternatives():
     @rtype: list
     """
     print(_("Enter alternatives."))
-    return __input_list(_("How many alternatives do you want to use?") + " ", _("Enter name of alternative "))
+    return __input_list(_("How many alternatives do you want to use?") + " ", _("Enter name of alternative") + ' ')
 
 
 def input_factors_compare(relative_measurement):
