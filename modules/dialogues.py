@@ -94,7 +94,7 @@ def input_factors():
     @rtype: list
     """
     print(_("Enter factors."))
-    return __input_list(_("How many factors do you want to use?") + " ", _("Enter name of factor №"))
+    return __input_list(_("How many factors do you want to use?") + " ", _("Enter name of factor "))
 
 
 def input_alternatives():
@@ -104,7 +104,7 @@ def input_alternatives():
     @rtype: list
     """
     print(_("Enter alternatives."))
-    return __input_list(_("How many alternatives do you want to use?") + " ", _("Enter name of alternative №"))
+    return __input_list(_("How many alternatives do you want to use?") + " ", _("Enter name of alternative "))
 
 
 def input_factors_compare(relative_measurement):
@@ -379,7 +379,7 @@ def __print_rate_instruction():
     table.add_row([_('Very strong disadvantage'), '1/7'])
     table.add_row([_('Very, very strong disadvantage'), '1/8'])
     table.add_row([_('Absolute disadvantage'), '1/9'])
-    print(table + '\n')
+    print(str(table) + '\n')
 
 
 if __name__ == '__main__':

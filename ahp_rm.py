@@ -16,7 +16,8 @@ def main():
         dl.input_alternatives_compares(relative_measurement)
     else:
         relative_measurement, file_checker = (fio.load_rm_from_csv
-                                              (args.factors,
+                                              (args.path,
+                                               args.factors,
                                                args.alternatives,
                                                args.factors_compare_array,
                                                args.alternatives_compare_arrays))
@@ -43,7 +44,7 @@ def main():
                        results_folder + args.alternatives,
                        results_folder + args.factors_compare_array,
                        results_folder + args.alternatives_compare_arrays)
-    fio.save_rm_string_to_file(relative_measurement, results_folder + args.result)
+    fio.save_rm_string_to_file(relative_measurement, results_folder, args.result)
 
 
 if __name__ == '__main__':

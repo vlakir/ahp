@@ -1,17 +1,3 @@
-import csv
-import os
-
-
-def ensure_dir(path):
-    """
-    Create the folder if it's not exist
-    @param path: Path including folder name
-    @type path: string
-    """
-    directory = os.path.dirname(path)
-    if not directory == '':
-        if not os.path.exists(directory):
-            os.makedirs(directory)
 
 
 def glue_result(categories, weights, is_sort):
@@ -62,36 +48,6 @@ def round_matrix(matrix, digits_num):
         for j in range(len(matrix[0])):
             result[i, j] = round(matrix[i, j], digits_num)
     return result
-
-
-def csv_to_list(file_path):
-    """
-    Import from csv-file to list
-    @param file_path: Path to the csv file (including its name)
-    @type file_path: string
-    @return: Imported values
-    @rtype: list
-    """
-    with open(file_path, newline='', encoding='utf-8') as file_obj:
-        reader = csv.reader(file_obj)
-        result = list(reader)
-    return result
-
-
-def list_to_csv(file_path, list_to_write):
-    """
-    Export from list to csv file
-    @param file_path: Path to the csv file (including its name)
-    @type file_path: string
-    @param list_to_write: Values to export
-    @type list_to_write: list
-    """
-    ensure_dir(file_path)
-    with open(file_path, "w", newline='', encoding='utf-8') as file_obj:
-        writer = csv.writer(file_obj, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
-        # print(list_to_write)
-        for line in list_to_write:
-            writer.writerow(line)
 
 
 def str_list_to_float(processing_list):

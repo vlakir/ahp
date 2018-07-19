@@ -2,27 +2,32 @@ import modules.utils as ut
 import modules.matclasses as mc
 import argparse
 import configparser
+import csv
+import os
 
 
 def parse_args():
     parser = argparse.ArgumentParser(
         description='''Realisation of AHP relative method by T.Saaty''',
         epilog='''(c) vlakir 2018''')
+    parser.add_argument('-p', '--path', default='./',
+                        help='Path to input files',
+                        metavar='PATH')
     parser.add_argument('-f', '--factors', default='factors.csv',
-                        help='Path to .csv file with list of factors',
-                        metavar='PATH')
+                        help='Name of .csv file with list of factors',
+                        metavar='NAME')
     parser.add_argument('-a', '--alternatives', default='alternatives.csv',
-                        help='Path to .csv file with list of alternatives',
-                        metavar='PATH')
+                        help='Name of  .csv file with list of alternatives',
+                        metavar='NAME')
     parser.add_argument('-fc', '--factors-compare-array', default='factors_compare.csv',
-                        help='Path to .csv file with factors compare array',
-                        metavar='PATH')
+                        help='Name of .csv file with factors compare array',
+                        metavar='NAME')
     parser.add_argument('-ac', '--alternatives-compare-arrays', default='alternatives_compares.csv',
-                        help='Path to .csv file with alternatives compare arrays',
-                        metavar='PATH')
+                        help='Name of .csv file with alternatives compare arrays',
+                        metavar='NAME')
     parser.add_argument('-r', '--result', default='result.txt',
-                        help='Path to .txt file with full solution expaination',
-                        metavar='PATH')
+                        help='Name of .txt file with full solution expaination',
+                        metavar='NAME')
     parser.add_argument('-i', '--interactive-input', action='store_const', const=True,
                         help='Ignore filepaths. All values will be asked interactively')
     parser.add_argument('-l', '--language', default='en',
@@ -32,12 +37,12 @@ def parse_args():
     return namespace
 
 
-def load_rm_from_csv(factor_file_path, alternatives_file_path,
-                     factors_compare_array_file_path, alternatives_compare_arrays_file_path):
+def load_rm_from_csv(path, factor_file_name, alternatives_file_name,
+                     factors_compare_array_file_name, alternatives_compare_arrays_file_name):
     file_checker = FileChecker()
 
     try:
-        factors = ut.csv_to_list(factor_file_path)
+        factors = csv_to_list(path + factor_file_name)
         file_checker.is_factor_file_found = True
         file_checker.is_factor_file_correct = (len(factors) == 1)
         if file_checker.is_factor_file_correct:
@@ -52,7 +57,7 @@ def load_rm_from_csv(factor_file_path, alternatives_file_path,
         factors = []
 
     try:
-        alternatives = ut.csv_to_list(alternatives_file_path)
+        alternatives = csv_to_list(path + alternatives_file_name)
         file_checker.is_alternatives_file_found = True
         file_checker.is_alternatives_file_correct = (len(alternatives) == 1)
         if file_checker.is_alternatives_file_correct:
@@ -67,7 +72,7 @@ def load_rm_from_csv(factor_file_path, alternatives_file_path,
         alternatives = []
 
     try:
-        factors_compare_array = ut.str_list_to_float(ut.csv_to_list(factors_compare_array_file_path))
+        factors_compare_array = ut.str_list_to_float(csv_to_list(path + factors_compare_array_file_name))
         file_checker.is_factors_compare_file_found = True
         file_checker.is_factors_compare_file_correct = ((len(factors_compare_array) == factors_num)
                                                         and (len(factors_compare_array[0]) == factors_num))
@@ -77,7 +82,7 @@ def load_rm_from_csv(factor_file_path, alternatives_file_path,
         factors_compare_array = []
 
     try:
-        alternatives_compare_arrays = ut.str_list_to_float(ut.csv_to_list(alternatives_compare_arrays_file_path))
+        alternatives_compare_arrays = ut.str_list_to_float(csv_to_list(path + alternatives_compare_arrays_file_name))
         file_checker.is_alternatives_compares_file_found = True
         file_checker.is_alternatives_compares_file_correct = ((len(alternatives_compare_arrays) ==
                                                                factors_num * alternatives_num)
@@ -104,10 +109,9 @@ def load_rm_from_csv(factor_file_path, alternatives_file_path,
 
 def save_rm_to_csv(relative_measurement, factor_file_path, alternatives_file_path,
                    factors_compare_array_file_path, alternatives_compare_arrays_file_path):
-    ut.list_to_csv(factor_file_path, [relative_measurement.get_factors()])
-    ut.list_to_csv(alternatives_file_path, [relative_measurement.get_alternatives()])
-    ut.list_to_csv(factors_compare_array_file_path,
-                   relative_measurement.get_factors_compare_matrix().get_matrix())
+    list_to_csv(factor_file_path, [relative_measurement.get_factors()])
+    list_to_csv(alternatives_file_path, [relative_measurement.get_alternatives()])
+    list_to_csv(factors_compare_array_file_path, relative_measurement.get_factors_compare_matrix().get_matrix())
 
     alternatives_compare_arrays = []
     alternatives_compare_matrixes = relative_measurement.get_alternatives_compare_matrixes()
@@ -118,11 +122,12 @@ def save_rm_to_csv(relative_measurement, factor_file_path, alternatives_file_pat
             for k in range(relative_measurement.get_alternatives_count()):
                 row.append(alternatives_compare_matrix.get_matrix_element(j + 1, k + 1))
             alternatives_compare_arrays.append(row)
-    ut.list_to_csv(alternatives_compare_arrays_file_path, alternatives_compare_arrays)
+        list_to_csv(alternatives_compare_arrays_file_path, alternatives_compare_arrays)
 
 
-def save_rm_string_to_file(relative_measurement, file_name):
-    file = open(file_name, 'w')
+def save_rm_string_to_file(relative_measurement, file_path, file_name):
+    ensure_dir(file_path)
+    file = open(file_path + file_name, 'w')
     file.write(relative_measurement.to_string())
 
 
@@ -140,6 +145,48 @@ def get_config_setting(setting_name):
     config = configparser.ConfigParser()
     config.read('settings.ini')
     return config.get("Settings", setting_name)
+
+
+def ensure_dir(path):
+    """
+    Create the folder if it's not exist
+    @param path: Path including folder name
+    @type path: string
+    """
+    directory = os.path.dirname(path)
+    if not directory == '':
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+
+def csv_to_list(file_path):
+    """
+    Import from csv-file to list
+    @param file_path: Path to the csv file (including its name)
+    @type file_path: string
+    @return: Imported values
+    @rtype: list
+    """
+    with open(file_path, newline='', encoding='utf-8') as file_obj:
+        reader = csv.reader(file_obj)
+        result = list(reader)
+    return result
+
+
+def list_to_csv(file_path, list_to_write):
+    """
+    Export from list to csv file
+    @param file_path: Path to the csv file (including its name)
+    @type file_path: string
+    @param list_to_write: Values to export
+    @type list_to_write: list
+    """
+    ensure_dir(file_path)
+    with open(file_path, "w", newline='', encoding='utf-8') as file_obj:
+        writer = csv.writer(file_obj, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
+        # print(list_to_write)
+        for line in list_to_write:
+            writer.writerow(line)
 
 
 class FileChecker(object):
