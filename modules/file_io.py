@@ -10,7 +10,7 @@ def parse_args():
     parser = argparse.ArgumentParser(
         description='''Realisation of AHP relative method by T.Saaty''',
         epilog='''(c) vlakir 2018''')
-    parser.add_argument('-p', '--path', default='./',
+    parser.add_argument('-p', '--path', default='.\\',
                         help='Path to input files',
                         metavar='PATH')
     parser.add_argument('-f', '--factors', default='factors.csv',
@@ -42,7 +42,7 @@ def load_rm_from_csv(path, factor_file_name, alternatives_file_name,
     file_checker = FileChecker()
 
     try:
-        factors = csv_to_list(path + factor_file_name)
+        factors = csv_to_list(correct_last_slash_in_path(path) + factor_file_name)
         file_checker.is_factor_file_found = True
         file_checker.is_factor_file_correct = (len(factors) == 1)
         if file_checker.is_factor_file_correct:
@@ -57,7 +57,7 @@ def load_rm_from_csv(path, factor_file_name, alternatives_file_name,
         factors = []
 
     try:
-        alternatives = csv_to_list(path + alternatives_file_name)
+        alternatives = csv_to_list(correct_last_slash_in_path(path) + alternatives_file_name)
         file_checker.is_alternatives_file_found = True
         file_checker.is_alternatives_file_correct = (len(alternatives) == 1)
         if file_checker.is_alternatives_file_correct:
@@ -72,7 +72,7 @@ def load_rm_from_csv(path, factor_file_name, alternatives_file_name,
         alternatives = []
 
     try:
-        factors_compare_array = ut.str_list_to_float(csv_to_list(path + factors_compare_array_file_name))
+        factors_compare_array = ut.str_list_to_float(csv_to_list(correct_last_slash_in_path(path) + factors_compare_array_file_name))
         file_checker.is_factors_compare_file_found = True
         file_checker.is_factors_compare_file_correct = ((len(factors_compare_array) == factors_num)
                                                         and (len(factors_compare_array[0]) == factors_num))
@@ -82,7 +82,7 @@ def load_rm_from_csv(path, factor_file_name, alternatives_file_name,
         factors_compare_array = []
 
     try:
-        alternatives_compare_arrays = ut.str_list_to_float(csv_to_list(path + alternatives_compare_arrays_file_name))
+        alternatives_compare_arrays = ut.str_list_to_float(csv_to_list(correct_last_slash_in_path(path) + alternatives_compare_arrays_file_name))
         file_checker.is_alternatives_compares_file_found = True
         file_checker.is_alternatives_compares_file_correct = ((len(alternatives_compare_arrays) ==
                                                                factors_num * alternatives_num)
@@ -125,17 +125,18 @@ def save_rm_to_csv(relative_measurement, factor_file_path, alternatives_file_pat
         list_to_csv(alternatives_compare_arrays_file_path, alternatives_compare_arrays)
 
 
-def save_rm_string_to_file(relative_measurement, file_path, file_name):
-    ensure_dir(file_path)
-    file = open(file_path + file_name, 'w')
+def save_rm_string_to_file(relative_measurement, path, file_name):
+    path = correct_last_slash_in_path(path)
+    ensure_dir(path)
+    file = open(path + file_name, 'w')
     file.write(relative_measurement.to_string())
 
 
 def create_config():
     config = configparser.ConfigParser()
     config.add_section('Settings')
-    config.set('Settings', 'results_folder', './results/')
-    config.set('Settings', 'locale_folder', './locale/')
+    config.set('Settings', 'results_folder', './results')
+    config.set('Settings', 'locale_folder', './locale')
     config.set('Settings', 'round_digits_num', '3')
     with open('settings.ini', 'w') as config_file:
         config.write(config_file)
@@ -153,6 +154,7 @@ def ensure_dir(path):
     @param path: Path including folder name
     @type path: string
     """
+    path = correct_last_slash_in_path(path)
     directory = os.path.dirname(path)
     if not directory == '':
         if not os.path.exists(directory):
@@ -181,12 +183,18 @@ def list_to_csv(file_path, list_to_write):
     @param list_to_write: Values to export
     @type list_to_write: list
     """
-    ensure_dir(file_path)
     with open(file_path, "w", newline='', encoding='utf-8') as file_obj:
         writer = csv.writer(file_obj, delimiter=',', quoting=csv.QUOTE_NONNUMERIC)
         # print(list_to_write)
         for line in list_to_write:
             writer.writerow(line)
+
+
+def correct_last_slash_in_path(path):
+    if path[-1] != '/' and path[-1] != '\\':
+        return path + '/'
+    else:
+        return path
 
 
 class FileChecker(object):

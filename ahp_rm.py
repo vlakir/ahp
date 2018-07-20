@@ -39,6 +39,8 @@ def main():
     relative_measurement.calculate()
     dl.show_result(relative_measurement)
     results_folder = fio.get_config_setting('results_folder')
+    results_folder = fio.correct_last_slash_in_path(results_folder)
+    fio.ensure_dir(results_folder)
     fio.save_rm_to_csv(relative_measurement,
                        results_folder + args.factors,
                        results_folder + args.alternatives,
