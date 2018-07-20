@@ -72,7 +72,8 @@ def load_rm_from_csv(path, factor_file_name, alternatives_file_name,
         alternatives = []
 
     try:
-        factors_compare_array = ut.str_list_to_float(csv_to_list(correct_last_slash_in_path(path) + factors_compare_array_file_name))
+        factors_compare_array = ut.str_list_to_float(csv_to_list(correct_last_slash_in_path(path) +
+                                                                 factors_compare_array_file_name))
         file_checker.is_factors_compare_file_found = True
         file_checker.is_factors_compare_file_correct = ((len(factors_compare_array) == factors_num)
                                                         and (len(factors_compare_array[0]) == factors_num))
@@ -82,7 +83,8 @@ def load_rm_from_csv(path, factor_file_name, alternatives_file_name,
         factors_compare_array = []
 
     try:
-        alternatives_compare_arrays = ut.str_list_to_float(csv_to_list(correct_last_slash_in_path(path) + alternatives_compare_arrays_file_name))
+        alternatives_compare_arrays = ut.str_list_to_float(csv_to_list(correct_last_slash_in_path(path) +
+                                                                       alternatives_compare_arrays_file_name))
         file_checker.is_alternatives_compares_file_found = True
         file_checker.is_alternatives_compares_file_correct = ((len(alternatives_compare_arrays) ==
                                                                factors_num * alternatives_num)
