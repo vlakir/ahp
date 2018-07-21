@@ -199,6 +199,11 @@ def correct_last_slash_in_path(path):
         return path
 
 
+def string_to_file(self, file_name):
+    file = open(file_name, 'w')
+    file.write(self.to_string())
+
+
 class FileChecker(object):
     def __init__(self):
         self.is_factor_file_found = False

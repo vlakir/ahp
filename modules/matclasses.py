@@ -14,7 +14,7 @@ class PairedComparisonMatrix(object):
         self.__matrix = np.zeros(shape=(self.__n, self.__n))
         for i in range(self.__n):
             self.__matrix[i, i] = 1
-        self.__categories = [None] * self.__n
+        self.__categories = [''] * self.__n
         self.__main_eigenvalue = 0
         # noinspection PyUnresolvedReferences
         self.__main_eigenvector = np.zeros(shape=self.__n)
@@ -191,23 +191,39 @@ class PairedComparisonMatrix(object):
         return result
 
     def is_normal_cr(self):
+        """
+        Check is CR has normal value (positiv and <= 0.2)
+        :return: Result of checking
+        :rtype: bool
+        """
         if (self.get_consistency_ratio() <= 0.2) and (self.get_consistency_ratio() >= 0):
             return True
         else:
             return False
 
     def get_unsorted_result(self):
+        """
+        Get result of calculation where categories sorted by their indexes
+        :return: [[Index, name of categorie, weight], ...]
+        :rtype: list[][]
+        """
         return ut.glue_result(self.__categories, self.get_weights(), False)
 
     def get_sorted_result(self):
+        """
+        Get result of calculation where categories sorted by their weights
+        :return: [[Index, name of categorie, weight], ...]
+        :rtype: list[][]
+        """
         return ut.glue_result(self.__categories, self.get_weights(), True)
 
     def to_string(self):
+        """
+        Get string representation of the object
+        :return: String representation of the object
+        :rtype: string
+        """
         return dl.pcm_to_string(self)
-
-    def string_to_file(self, file_name):
-        file = open(file_name, 'w')
-        file.write(self.to_string())
 
 
 class RelativeMeasurement(object):
