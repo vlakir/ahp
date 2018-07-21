@@ -4,6 +4,9 @@ import modules.dialogues as dl
 
 
 class PairedComparisonMatrix(object):
+    """
+    Representation of comparison  matrix for set of named categories
+    """
 
     def __init__(self, size):
         self.__n = size
@@ -16,44 +19,104 @@ class PairedComparisonMatrix(object):
         # noinspection PyUnresolvedReferences
         self.__main_eigenvector = np.zeros(shape=self.__n)
 
-    def set_matrix_element(self, row_num, column_num, value):
-        if row_num == column_num:
-            self.__matrix[row_num - 1, column_num - 1] = 1
+    def set_matrix_element(self, row_idx, column_idx, value):
+        """
+        Set single matrix member
+        :param row_idx: Index of row (numbering from 1, not from 0!)
+        :type row_idx: int
+        :param column_idx: Number of column (numbering from 1, not from 0!)
+        :type column_idx: int
+        :param value: setted value
+        :type value: float
+        """
+        if row_idx == column_idx:
+            self.__matrix[row_idx - 1, column_idx - 1] = 1
         else:
-            self.__matrix[row_num - 1, column_num - 1] = value
+            self.__matrix[row_idx - 1, column_idx - 1] = value
             if not value == 0:
-                self.__matrix[column_num - 1, row_num - 1] = 1 / value
+                self.__matrix[column_idx - 1, row_idx - 1] = 1 / value
             else:
-                self.__matrix[column_num - 1, row_num - 1] = 0
+                self.__matrix[column_idx - 1, row_idx - 1] = 0
 
-    def get_matrix_element(self, row_num, column_num):
-        return self.__matrix[row_num - 1, column_num - 1]
+    def get_matrix_element(self, row_idx, column_idx):
+        """
+        Get single matrix member
+        :param row_idx: Index of row (numbering from 1, not from 0!)
+        :type row_idx: int
+        :param column_idx: Index of column (numbering from 1, not from 0!)
+        :type column_idx: int
+        :return: value of matrix member
+        :rtype: float
+        """
+        return self.__matrix[row_idx - 1, column_idx - 1]
 
     def set_matrix(self, array):
+        """
+        Set all matrix members from list
+        :param array: Square array of matrix members
+        :type array: list[][]
+        """
         for i in range(self.__n):
             for j in range(self.__n):
                 self.set_matrix_element(i + 1, j + 1, array[i][j])
 
     def get_matrix(self):
+        """
+        Get all matrix members as list
+        :return: Square array of matrix members
+        :rtype: list
+        """
         return self.__matrix
 
-    def set_category(self, num, value):
-        self.__categories[num - 1] = value
+    def set_category(self, idx, value):
+        """
+        Set name of categorie
+        :param idx: Index of categorie (numbering from 1, not from 0!)
+        :type idx: int
+        :param value: setted value
+        :type value: string
+        """
+        self.__categories[idx - 1] = value
 
-    def get_category(self, num):
-        return self.__categories[num - 1]
+    def get_category(self, idx):
+        """
+        Get name of categorie
+        :param idx: Index of categorie (numbering from 1, not from 0!)
+        :type idx: int
+        :return: Name of categorie
+        :rtype: string
+        """
+        return self.__categories[idx - 1]
 
     def set_categories(self, array):
+        """
+        Set all categories names from list
+        :param array: Categories names
+        :type array: list
+        """
         for i in range(self.__n):
             self.set_category(i, array[i - 1])
 
     def get_categories(self):
+        """
+        Get all categories names as list
+        :return: Categories names
+        :rtype: list
+        """
         return self.__categories
 
     def get_size(self):
+        """
+        Get size of square matrix
+        :return: Size
+        :rtype: int
+        """
         return self.__n
 
     def calculate(self):
+        """
+        Calculate main eigenvector, main eigenvalue and weigts for a given matrix
+        """
         v, w = np.linalg.eig(self.__matrix)
         v = abs(v)
         w = abs(w)
@@ -62,14 +125,28 @@ class PairedComparisonMatrix(object):
         self.__main_eigenvector = w[:, perron_position]
 
     def get_main_eigenvalue(self):
+        """
+        Get main eigenvector. Run this method only after calculate()
+        :return: Main eigenvalue of matrix
+        :rtype: float
+        """
         return self.__main_eigenvalue
 
     def get_main_eigenvector(self):
+        """
+        Get main eigenvector. Run this method only after calculate()
+        :return: Main eigenvector of matrix
+        :rtype: float
+        """
         return self.__main_eigenvector
 
     def get_weights(self):
+        """
+        Get vector of weigths. Run this method only after calculate()
+        :return: Vector of weigths
+        :rtype: list
+        """
         summa = sum(self.__main_eigenvector)
-
         if summa != 0:
             result = self.__main_eigenvector / summa
         else:
@@ -77,9 +154,19 @@ class PairedComparisonMatrix(object):
         return result
 
     def get_consistency_index(self):
+        """
+        Get CI coefficient. Run this method only after calculate()
+        :return: CI coefficient
+        :rtype: float
+        """
         return (self.__main_eigenvalue - self.__n) / (self.__n - 1)
 
     def get_consistency_ratio(self):
+        """
+        Get CR coefficient. Run this method only after calculate()
+        :return: CR coefficient
+        :rtype: float
+        """
         n_to_ri = {
             1: 0.01,
             2: 0.01,
