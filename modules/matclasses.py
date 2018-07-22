@@ -335,9 +335,17 @@ class RelativeMeasurement(object):
         self.__alternatives_compare_matrixes[factor_idx - 1].set_matrix_elements(array)
 
     def get_weights(self):
+        """
+        Get vector of weigths. Run this method only after calculate()
+        :return: Vector of weigths
+        :rtype: list
+        """
         return self.get_weights()
 
     def calculate(self):
+        """
+        Calculate main eigenvectors, main eigenvalues and weigts for all matrixes
+        """
         self.__factors_compare_matrix.calculate()
         for i in range(len(self.__factors)):
             self.__alternatives_compare_matrixes[i].calculate()
@@ -348,18 +356,38 @@ class RelativeMeasurement(object):
                                       self.__factors_compare_matrix.get_weights()[j])
 
     def get_unsorted_result(self):
+        """
+        Get result of calculation where alternatives sorted by their indexes
+        :return: [[Index, name of alternative, weight], ...]
+        :rtype: list[][]
+        """
         return ut.glue_result(self.__alternatives, self.__weights, False)
 
     def get_sorted_result(self):
+        """
+        Get result of calculation where alternatives sorted by their weights
+        :return: [[Index, name of alternative, weight], ...]
+        :rtype: list[][]
+        """
         return ut.glue_result(self.__alternatives, self.__weights, True)
 
     def is_normal_cr(self):
+        """
+        Check is all CRs have normal values (positiv and <= 0.2)
+        :return: Result of checking
+        :rtype: bool
+        """
         result = self.get_factors_compare_matrix().is_normal_cr()
         for i in range(self.get_alternatives_count()):
             result = (result and self.get_alternatives_compare_matrixes()[i].is_normal_cr())
         return result
 
     def to_string(self):
+        """
+        Get string representation of the object
+        :return: String representation of the object
+        :rtype: string
+        """
         return dl.rm_to_string(self)
 
 
