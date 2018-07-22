@@ -186,7 +186,7 @@ def input_yes_no(question):
             else:
                 return False
         except ValueError:
-            print(_('You must enter only "y" or "n"! Try again. \n'))
+            print(_('You must enter only "y" or "n"! Try again.') + " \n")
 
 
 def show_result(relative_measurement):
@@ -246,7 +246,7 @@ def pcm_to_string(paired_comparison_matrix):
         table.add_row(row)
         bottom_str = ('\n' + _('Main eigenvalue = ') +
                       str(round(paired_comparison_matrix.get_main_eigenvalue(), round_digits_num)) + '\n' +
-                      'C.R. = '
+                      'CR = '
                       + str(round(paired_comparison_matrix.get_consistency_ratio(), round_digits_num)) + '\n')
 
         if not paired_comparison_matrix.is_normal_cr():
