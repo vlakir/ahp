@@ -302,11 +302,11 @@ class RelativeMeasurement(object):
         """
         self.__factors_compare_matrix.set_matrix_element(row_idx, column_idx, value)
 
-    def set_alternatives_compare_matrixes_element(self, matrix_idx, row_idx, column_idx, value):
+    def set_alternatives_compare_matrixes_element(self, factor_idx, row_idx, column_idx, value):
         """
         Set single alternatives compare matrix member
-        :param matrix_idx: Index of alternative (numbering from 1, not from 0!)
-        :type matrix_idx: int
+        :param factor_idx: Index of factor (numbering from 1, not from 0!)
+        :type factor_idx: int
         :param row_idx: Index of row (numbering from 1, not from 0!)
         :type row_idx: int
         :param column_idx: Number of column (numbering from 1, not from 0!)
@@ -314,7 +314,7 @@ class RelativeMeasurement(object):
         :param value: setted value
         :type value: float
         """
-        self.__alternatives_compare_matrixes[matrix_idx - 1].set_matrix_element(row_idx, column_idx, value)
+        self.__alternatives_compare_matrixes[factor_idx - 1].set_matrix_element(row_idx, column_idx, value)
 
     def set_factors_compare_matrix_elements(self, array):
         """
@@ -324,13 +324,15 @@ class RelativeMeasurement(object):
         """
         self.__factors_compare_matrix.set_matrix_elements(array)
 
-    def set_alternatives_compare_matrixes_elements(self, matrix_num, array):
+    def set_alternatives_compare_matrixes_elements(self, factor_idx, array):
         """
-        Set all alternatives compare matrixes members from list
-        :param array: Array of matrix members
+        Set all alternatives compare matrix members for selected factor index from list
+        :param factor_idx: Index of factor (numbering from 1, not from 0!)
+        :type factor_idx: int
+        :param array: Square array of matrix members
         :type array: list[][]
         """
-        self.__alternatives_compare_matrixes[matrix_num - 1].set_matrix_elements(array)
+        self.__alternatives_compare_matrixes[factor_idx - 1].set_matrix_elements(array)
 
     def get_weights(self):
         return self.get_weights()
