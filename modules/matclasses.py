@@ -21,7 +21,8 @@ class PairedComparisonMatrix(object):
 
     def set_matrix_element(self, row_idx, column_idx, value):
         """
-        Set single matrix member
+        Set single matrix member.
+        The matrix element symmetrical with respect to the main diagonal is automatically set
         :param row_idx: Index of row (numbering from 1, not from 0!)
         :type row_idx: int
         :param column_idx: Number of column (numbering from 1, not from 0!)
@@ -304,7 +305,8 @@ class RelativeMeasurement(object):
 
     def set_alternatives_compare_matrixes_element(self, factor_idx, row_idx, column_idx, value):
         """
-        Set single alternatives compare matrix member
+        Set single alternatives compare matrix member.
+        The matrix element symmetrical with respect to the main diagonal is automatically set
         :param factor_idx: Index of factor (numbering from 1, not from 0!)
         :type factor_idx: int
         :param row_idx: Index of row (numbering from 1, not from 0!)

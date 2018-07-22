@@ -4,17 +4,17 @@ import modules.file_io as fio
 
 
 def main():
-    # fio.create_config()
+    # fio.create_config() # uncomment if you need to reset settings.ini to default values
     args = fio.parse_args()
     dl.set_language(args.language)
-    if args.interactive_input:
+    if args.interactive_input:  # no need to check and load csv-files
         dl.interactive_input_info()
         factors = dl.input_factors()
         alternatives = dl.input_alternatives()
         relative_measurement = mc.RelativeMeasurement(alternatives, factors)
         dl.input_factors_compare(relative_measurement)
         dl.input_alternatives_compares(relative_measurement)
-    else:
+    else:  # check and load csv-files
         relative_measurement, file_checker = (fio.load_rm_from_csv
                                               (args.path,
                                                args.factors,

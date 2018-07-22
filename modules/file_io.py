@@ -7,6 +7,11 @@ import os
 
 
 def parse_args():
+    """
+    Parse command-line arguments
+    :return: Object holding attributes
+    :rtype: argparse.Namespace
+    """
     parser = argparse.ArgumentParser(
         description='''Realisation of AHP relative method by T.Saaty''',
         epilog='''(c) vlakir 2018''')
@@ -39,6 +44,21 @@ def parse_args():
 
 def load_rm_from_csv(path, factor_file_name, alternatives_file_name,
                      factors_compare_array_file_name, alternatives_compare_arrays_file_name):
+    """
+    Load RelativeMeasurement object from set of csv-files
+    :param path: Path to files
+    :type path: string
+    :param factor_file_name: Name of file with factors names
+    :type factor_file_name: string
+    :param alternatives_file_name: Name of file with alternatives names
+    :type alternatives_file_name: string
+    :param factors_compare_array_file_name: Name of file with factors compare matrix
+    :type factors_compare_array_file_name: string
+    :param alternatives_compare_arrays_file_name: Name of file with alternatives compare matrixes
+    :type alternatives_compare_arrays_file_name: string
+    :return: Object
+    :rtype: modules.RelativeMeasurement
+    """
     file_checker = FileChecker()
 
     try:
@@ -111,6 +131,19 @@ def load_rm_from_csv(path, factor_file_name, alternatives_file_name,
 
 def save_rm_to_csv(relative_measurement, factor_file_path, alternatives_file_path,
                    factors_compare_array_file_path, alternatives_compare_arrays_file_path):
+    """
+    Save RelativeMeasurement object to set of csv-files
+    :param relative_measurement: Object to save
+    :type relative_measurement: modules.RelativeMeasurement
+    :param factor_file_path: Path (includes filename) to file with factors names
+    :type factor_file_path: string
+    :param alternatives_file_path: Path (includes filename) to file with alternatives names
+    :type alternatives_file_path: string
+    :param factors_compare_array_file_path: Path (includes filename) to file with factors compare matrix
+    :type factors_compare_array_file_path: string
+    :param alternatives_compare_arrays_file_path: Path (includes filename) to file with alternativescompare matrixes
+    :type alternatives_compare_arrays_file_path: string
+    """
     list_to_csv(factor_file_path, [relative_measurement.get_factors()])
     list_to_csv(alternatives_file_path, [relative_measurement.get_alternatives()])
     list_to_csv(factors_compare_array_file_path, relative_measurement.get_factors_compare_matrix().get_matrix())
@@ -128,6 +161,15 @@ def save_rm_to_csv(relative_measurement, factor_file_path, alternatives_file_pat
 
 
 def save_rm_string_to_file(relative_measurement, path, file_name):
+    """
+    Save string representation of RelativeMeasurement object to file
+    :param relative_measurement: Object to save
+    :type relative_measurement: modules.RelativeMeasurement
+    :param path: Path to file (without filename)
+    :type path: string
+    :param file_name: File name
+    :type file_name: string
+    """
     path = correct_last_slash_in_path(path)
     ensure_dir(path)
     file = open(path + file_name, 'w')
@@ -135,6 +177,9 @@ def save_rm_string_to_file(relative_measurement, path, file_name):
 
 
 def create_config():
+    """
+    Create configuration file settings.ini
+    """
     config = configparser.ConfigParser()
     config.add_section('Settings')
     config.set('Settings', 'results_folder', './results')
@@ -145,6 +190,13 @@ def create_config():
 
 
 def get_config_setting(setting_name):
+    """
+    Get setting from configuration file settings.ini
+    :param setting_name: Name of setting
+    :type setting_name: string
+    :return: Value of setting
+    :rtype: string
+    """
     config = configparser.ConfigParser()
     config.read('settings.ini')
     return config.get("Settings", setting_name)
@@ -193,18 +245,23 @@ def list_to_csv(file_path, list_to_write):
 
 
 def correct_last_slash_in_path(path):
+    """
+    Add slash at the and of path string if neccesary
+    :param path: Path to correct
+    :type path: string
+    :return: Corrected path
+    :rtype: string
+    """
     if path[-1] != '/' and path[-1] != '\\':
         return path + '/'
     else:
         return path
 
 
-def string_to_file(self, file_name):
-    file = open(file_name, 'w')
-    file.write(self.to_string())
-
-
 class FileChecker(object):
+    """
+    Container for result of csv-files checkings (existence, correct format)
+    """
     def __init__(self):
         self.is_factor_file_found = False
         self.is_factor_file_correct = False
