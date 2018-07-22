@@ -5,7 +5,7 @@ import modules.dialogues as dl
 
 class PairedComparisonMatrix(object):
     """
-    Representation of comparison  matrix for set of named categories
+    Container for comparison  matrix for set of named categories
     """
 
     def __init__(self, size):
@@ -50,7 +50,7 @@ class PairedComparisonMatrix(object):
         """
         return self.__matrix[row_idx - 1, column_idx - 1]
 
-    def set_matrix(self, array):
+    def set_matrix_elements(self, array):
         """
         Set all matrix members from list
         :param array: Square array of matrix members
@@ -227,6 +227,9 @@ class PairedComparisonMatrix(object):
 
 
 class RelativeMeasurement(object):
+    """
+    Container for all measurement data
+    """
     def __init__(self, alternatives, factors):
         self.__factors = factors
         self.__alternatives = alternatives
@@ -240,34 +243,94 @@ class RelativeMeasurement(object):
             self.__alternatives_compare_matrixes.append(acm)
 
     def get_factors_compare_matrix(self):
+        """
+        Get matrix of factors compare
+        :return: Matrix of factors compare
+        :rtype: modules.PairedComparisonMatrix
+        """
         return self.__factors_compare_matrix
 
     def get_alternatives_compare_matrixes(self):
+        """
+        Get matrixes of alternatives compare
+        :return: Matrixes of alternatives compare
+        :rtype: modules.PairedComparisonMatrix[]
+        """
         return self.__alternatives_compare_matrixes
 
     def get_factors_count(self):
+        """
+        Get count of factors
+        :return: Count of factors
+        :rtype: int
+        """
         return len(self.__factors)
 
     def get_alternatives_count(self):
+        """
+        Get count of alternatives
+        :return: Count of alternatives
+        :rtype: int
+        """
         return len(self.__alternatives)
 
     def get_factors(self):
+        """
+        Get factors names
+        :return: Factors names
+        :rtype: list
+        """
         return self.__factors
 
     def get_alternatives(self):
+        """
+        Get alternatives names
+        :return: Alternatives names
+        :rtype: list
+        """
         return self.__alternatives
 
-    def set_factors_compare_matrix_element(self, row_num, column_num, value):
-        self.__factors_compare_matrix.set_matrix_element(row_num, column_num, value)
+    def set_factors_compare_matrix_element(self, row_idx, column_idx, value):
+        """
+        Set single factors compare matrix member
+        :param row_idx: Index of row (numbering from 1, not from 0!)
+        :type row_idx: int
+        :param column_idx: Number of column (numbering from 1, not from 0!)
+        :type column_idx: int
+        :param value: setted value
+        :type value: float
+        """
+        self.__factors_compare_matrix.set_matrix_element(row_idx, column_idx, value)
 
-    def set_alternatives_compare_matrixes_element(self, matrix_num, row_num, column_num, value):
-        self.__alternatives_compare_matrixes[matrix_num - 1].set_matrix_element(row_num, column_num, value)
+    def set_alternatives_compare_matrixes_element(self, matrix_idx, row_idx, column_idx, value):
+        """
+        Set single alternatives compare matrix member
+        :param matrix_idx: Index of alternative (numbering from 1, not from 0!)
+        :type matrix_idx: int
+        :param row_idx: Index of row (numbering from 1, not from 0!)
+        :type row_idx: int
+        :param column_idx: Number of column (numbering from 1, not from 0!)
+        :type column_idx: int
+        :param value: setted value
+        :type value: float
+        """
+        self.__alternatives_compare_matrixes[matrix_idx - 1].set_matrix_element(row_idx, column_idx, value)
 
     def set_factors_compare_matrix_elements(self, array):
-        self.__factors_compare_matrix.set_matrix(array)
+        """
+        Set all factors compare matrix members from list
+        :param array: Square array of matrix members
+        :type array: list[][]
+        """
+        self.__factors_compare_matrix.set_matrix_elements(array)
 
     def set_alternatives_compare_matrixes_elements(self, matrix_num, array):
-        self.__alternatives_compare_matrixes[matrix_num - 1].set_matrix(array)
+        """
+        Set all alternatives compare matrixes members from list
+        :param array: Array of matrix members
+        :type array: list[][]
+        """
+        self.__alternatives_compare_matrixes[matrix_num - 1].set_matrix_elements(array)
 
     def get_weights(self):
         return self.get_weights()
